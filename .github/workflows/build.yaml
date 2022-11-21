@@ -22,7 +22,7 @@ jobs:
           java-version: 11
           cache: 'gradle'
       - name: Build Liberty-Tools-Intellij
-        run: gradle buildPlugin
+        run: openssl version
       - name: Archive artifacts
         if: runner.os == 'Linux'
         uses: actions/upload-artifact@v3
