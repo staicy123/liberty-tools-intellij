@@ -1,33 +1,21 @@
 name: Build
 
 on:
+  workflow_dispatch:
   push:
     branches: '**'
   pull_request:
-    branches: [main, ls-integration]
+    branches: [main]
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: 11
-          cache: 'gradle'
-      - name: Build Liberty-Tools-Intellij
+      - name: Check OpenSSL version
         run: openssl version
-      - name: Archive artifacts
-        if: runner.os == 'Linux'
-        uses: actions/upload-artifact@v3
-        with:
-          name: liberty-tools-intellij-${{ github.sha }}
-          path: ./**/*liberty-tools-intellij*.zip
-          if-no-files-found: warn
-          retention-days: 7
+      - name: Check OpenSSH version
+        run: ssh -V
