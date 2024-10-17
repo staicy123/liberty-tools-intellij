@@ -63,7 +63,7 @@ configurations {
     runtimeClasspath {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
-    //apply plugin: "kotlin"
+    
     // Ensures that the JVM target is set to 17 for all Kotlin compilation tasks, including both main and test sources.
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
