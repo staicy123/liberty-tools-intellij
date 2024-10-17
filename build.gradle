@@ -63,7 +63,7 @@ configurations {
     runtimeClasspath {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
-    
+
     // Ensures that the JVM target is set to 17 for all Kotlin compilation tasks, including both main and test sources.
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
@@ -163,6 +163,7 @@ task copyDeps(type: Copy) {
 }
 
 intellijPlatform {
+    buildSearchableOptions = false
     pluginConfiguration {
         ideaVersion {
             sinceBuild = providers.gradleProperty("pluginSinceBuild")
@@ -202,15 +203,6 @@ test {
     testLogging {
         showStandardStreams = true
         exceptionFormat = 'full'
-    }
-}
-
-tasks {
-    // Disabling buildSearchableOptions, which runs as part of the buildPlugin task.
-    // this is to buildSearchableOptions to workaround the "Only one instance of IDEA can be run at a time" problem.
-    // Per documentation: https://plugins.jetbrains.com/docs/intellij/ide-development-instance.html#the-development-instance-sandbox-directory
-    buildSearchableOptions {
-        enabled = false
     }
 }
 
