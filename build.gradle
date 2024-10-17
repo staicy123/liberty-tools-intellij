@@ -1,3 +1,5 @@
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+
 plugins {
     id 'java'
     id 'org.jetbrains.intellij.platform' version '2.1.0'
@@ -7,13 +9,17 @@ plugins {
 group 'io.openliberty.tools'
 version '24.0.9'
 
-sourceCompatibility = 17
-targetCompatibility = 17
 
 def remoteRobotVersion = "0.11.18"
 // To switch to nightly version, append "@nightly" to the version number (i.e. 0.4.1-20240828-013108@nightly)
-def lsp4ijVersion = '0.5.0'
+def lsp4ijVersion = '0.6.0'
 
+allprojects {
+    apply plugin: 'java'
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+}
 repositories {
     mavenCentral()
     maven {
@@ -43,10 +49,11 @@ repositories {
     maven {
         url = "https://cache-redirector.jetbrains.com/download-pgp-verifier"
     }
-
+    intellijPlatform {
+        defaultRepositories()
+    }
     mavenLocal() // TODO remove once Liberty LS is publicly available
 }
-
 configurations {
     lsp
     // needed to avoid ClassCastException org.apache.xerces.jaxp.DocumentBuilderFactoryImpl cannot be cast to class javax.xml.parsers.DocumentBuilderFactory
@@ -56,36 +63,37 @@ configurations {
     runtimeClasspath {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
-
+    //apply plugin: "kotlin"
     // Ensures that the JVM target is set to 17 for all Kotlin compilation tasks, including both main and test sources.
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
-            jvmTarget = "17"
+            jvmTarget = javaVersion
         }
     }
 }
 
 dependencies {
 
-    implementation ('org.eclipse.lsp4mp:org.eclipse.lsp4mp.ls:0.12.0') {
+    implementation('org.eclipse.lsp4mp:org.eclipse.lsp4mp.ls:0.12.0') {
         exclude group: 'org.eclipse.lsp4j'
         exclude group: 'com.google.code.gson'
     }
-    implementation ('org.eclipse.lemminx:org.eclipse.lemminx:0.26.1') {
+    implementation('org.eclipse.lemminx:org.eclipse.lemminx:0.26.1') {
         exclude group: 'org.eclipse.lsp4j'
         exclude group: 'com.google.code.gson'
     }
     implementation 'io.openliberty.tools:liberty-langserver-lemminx:2.1.2'
-    implementation ('io.openliberty.tools:liberty-langserver:2.1.2') {
+    implementation('io.openliberty.tools:liberty-langserver:2.1.2') {
         exclude group: 'org.eclipse.lsp4j'
         exclude group: 'com.google.code.gson'
     }
-    implementation ('org.eclipse.lsp4jakarta:org.eclipse.lsp4jakarta.ls:0.2.0') {
+    implementation('org.eclipse.lsp4jakarta:org.eclipse.lsp4jakarta.ls:0.2.0') {
         exclude group: 'org.eclipse.lsp4mp'
         exclude group: 'org.eclipse.lsp4j'
         exclude group: 'com.google.code.gson'
     }
     implementation 'org.apache.maven:maven-artifact:3.6.3'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.0'
 //    implementation 'com.vladsch.flexmark:flexmark:0.64.8'
 //    implementation 'org.jsoup:jsoup:1.15.3'
     //Add junit dependency back when tests are added
@@ -97,7 +105,7 @@ dependencies {
     testImplementation 'com.intellij.remoterobot:remote-robot:' + remoteRobotVersion
     testImplementation 'com.intellij.remoterobot:remote-fixtures:' + remoteRobotVersion
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-    testImplementation('com.jetbrains.intellij.maven:maven-test-framework:241.15989.150') {
+    testImplementation('com.jetbrains.intellij.maven:maven-test-framework:242.23339.11') {
         transitive = false
     }
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
@@ -129,7 +137,24 @@ dependencies {
     implementation files(new File(buildDir, 'server')) {
         builtBy 'copyDeps'
     }
+
+    intellijPlatform {
+        create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
+        bundledPlugins providers.gradleProperty("platformBundledPlugins").orElse("").get().split(',').toList()
+
+        def lsp4ij = providers.gradleProperty('useLocal') && providers.gradleProperty('useLocal') == 'true' ?
+                file("../lsp4ij/build/distributions/LSP4IJ/") :
+                'com.redhat.devtools.lsp4ij:' + lsp4ijVersion
+        plugins lsp4ij
+        pluginVerifier()
+        zipSigner()
+        instrumentationTools()
+
+        testFramework TestFrameworkType.Platform.INSTANCE
+        testFramework TestFrameworkType.Plugin.Java.INSTANCE
+    }
 }
+
 
 task copyDeps(type: Copy) {
     from configurations.lsp
@@ -137,37 +162,40 @@ task copyDeps(type: Copy) {
     rename '^(.*)(-[0-9]+[.[0-9]+]+(-SNAPSHOT)?)(.*)$', '$1$4'
 }
 
+intellijPlatform {
+    pluginConfiguration {
+        ideaVersion {
+            sinceBuild = providers.gradleProperty("pluginSinceBuild")
+            untilBuild = providers.gradleProperty("pluginUntilBuild")
+        }
+    }
+}
 runIde {
     jvmArgs '--add-exports', 'java.base/jdk.internal.vm=ALL-UNNAMED'
 }
 
-intellij {
-    // For a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
-    version = '2024.1.6'
-
-    def lsp4ij = project.hasProperty('useLocal') && project.property('useLocal') == 'true' ?
-            file("../lsp4ij/build/distributions/LSP4IJ/") :
-            'com.redhat.devtools.lsp4ij:' + lsp4ijVersion
-    plugins = ['java', 'maven', 'gradle-java', 'properties', 'terminal', 'org.jetbrains.idea.maven', 'com.intellij.gradle', lsp4ij]
-    updateSinceUntilBuild = false
+intellijPlatformTesting.runIde {
+    runIdeForUiTests {
+        task {
+            jvmArgumentProviders.add({
+                [
+                        "-Drobot-server.port=8082",
+                        "-Dide.mac.message.dialogs.as.sheets=false",
+                        "-Djb.privacy.policy.text=<!--999.999-->",
+                        "-Djb.consents.confirmation.enabled=false",
+                        "-Didea.trust.all.projects=true",
+                        "-Dide.show.tips.on.startup.default.value=false",
+                        "-Dide.mac.file.chooser.native=false",
+                        "-DjbScreenMenuBar.enabled=false",
+                        "-Dapple.laf.useScreenMenuBar=false",
+                ]
+            } as CommandLineArgumentProvider)
+        }
+        plugins {
+            robotServerPlugin(remoteRobotVersion)
+        }
+    }
 }
-
-downloadRobotServerPlugin {
-    version.set(remoteRobotVersion)
-}
-
-runIdeForUiTests {
-    systemProperty "robot-server.port", "8082"
-    systemProperty "ide.mac.message.dialogs.as.sheets", "false"
-    systemProperty "jb.privacy.policy.text", "<!--999.999-->"
-    systemProperty "jb.consents.confirmation.enabled", "false"
-    systemProperty "idea.trust.all.projects", "true"
-    systemProperty "ide.show.tips.on.startup.default.value", "false"
-    systemProperty "ide.mac.file.chooser.native", "false"
-    systemProperty "jbScreenMenuBar.enabled", "false"
-    systemProperty "apple.laf.useScreenMenuBar", "false"
-}
-
 test {
     useJUnitPlatform()
 
