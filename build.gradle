@@ -1,5 +1,4 @@
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
-
 plugins {
     id 'java'
     id 'org.jetbrains.intellij.platform' version '2.1.0'
@@ -7,7 +6,7 @@ plugins {
 }
 
 group 'io.openliberty.tools'
-version '24.0.11'
+version '24.0.9'
 
 
 def remoteRobotVersion = "0.11.18"
@@ -94,8 +93,8 @@ dependencies {
     }
     implementation 'org.apache.maven:maven-artifact:3.6.3'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.0'
-//    implementation 'com.vladsch.flexmark:flexmark:0.64.8'
-//    implementation 'org.jsoup:jsoup:1.15.3'
+    implementation 'com.vladsch.flexmark:flexmark:0.64.8'
+    implementation 'org.jsoup:jsoup:1.15.3'
     //Add junit dependency back when tests are added
     //testImplementation group: 'junit', name: 'junit', version: '4.13.1'
     //required by lsp4j as the version from IJ is incompatible
@@ -162,17 +161,14 @@ task copyDeps(type: Copy) {
     rename '^(.*)(-[0-9]+[.[0-9]+]+(-SNAPSHOT)?)(.*)$', '$1$4'
 }
 
-intellijPlatform {
-    buildSearchableOptions = false
-    pluginConfiguration {
-        ideaVersion {
-            sinceBuild = providers.gradleProperty("pluginSinceBuild")
-            untilBuild = providers.gradleProperty("pluginUntilBuild")
-        }
-    }
-}
+
 runIde {
-    jvmArgs '--add-exports', 'java.base/jdk.internal.vm=ALL-UNNAMED'
+    jvmArgumentProviders.add({
+        [
+                "--add-exports",
+                "java.base/jdk.internal.vm=ALL-UNNAMED",
+        ]
+    } as CommandLineArgumentProvider)
 }
 
 intellijPlatformTesting.runIde {
@@ -186,9 +182,9 @@ intellijPlatformTesting.runIde {
                         "-Djb.consents.confirmation.enabled=false",
                         "-Didea.trust.all.projects=true",
                         "-Dide.show.tips.on.startup.default.value=false",
-                        "-Dide.mac.file.chooser.native=false",
-                        "-DjbScreenMenuBar.enabled=false",
-                        "-Dapple.laf.useScreenMenuBar=false",
+//                        "-Dide.mac.file.chooser.native=false",
+//                        "-DjbScreenMenuBar.enabled=false",
+//                        "-Dapple.laf.useScreenMenuBar=false",
                 ]
             } as CommandLineArgumentProvider)
         }
@@ -197,6 +193,7 @@ intellijPlatformTesting.runIde {
         }
     }
 }
+
 test {
     useJUnitPlatform()
 
@@ -205,9 +202,22 @@ test {
         exceptionFormat = 'full'
     }
 }
+//
+//    test {
+//        filter {
+//            includeTestsMatching "io.openliberty.tools.intellij.lsp4jakarta.it.annotations.*"
+//        }
+//    }
 
-patchPluginXml {
-    changeNotes = """
+//intellijPlatform.pluginConfiguration.changeNotes
+intellijPlatform {
+    buildSearchableOptions = false
+    pluginConfiguration {
+        ideaVersion {
+            sinceBuild = providers.gradleProperty("pluginSinceBuild")
+            untilBuild = providers.gradleProperty("pluginUntilBuild")
+        }
+        changeNotes = """
         <h2> 24.0.9 </h2>
         <p>Version 24.0.9 of Liberty Tools for IntelliJ IDEA contains enhancements and fixes. Version 24.0.9 requires IntelliJ IDEA version 2024.1.* ONLY and a minimum of Java 17.</p>
         Notable changes:
@@ -346,5 +356,12 @@ patchPluginXml {
         <li> First preview release
         </ul>
         """
-    version project.version
+        version project.version
+    }
 }
+
+
+
+
+
+
