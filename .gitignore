@@ -5,5 +5,6 @@ video
 .idea
 *.xml
 .DS_Store
+.intellijPlatform
 bin/
 
