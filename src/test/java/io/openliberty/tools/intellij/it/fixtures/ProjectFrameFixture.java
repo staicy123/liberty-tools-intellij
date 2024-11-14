@@ -67,6 +67,19 @@ public class ProjectFrameFixture extends CommonContainerFixture {
                 byXpath("//div[@class='ActionMenu' and @text='" + text + "']"),
                 Duration.ofSeconds(Integer.parseInt(waitTime)));
     }
+    /**
+     * Returns the ComponentFixture object associated with the ActionMainMenu class.
+     *
+     * @param xpathVars The Locator custom variables: text, waitTime(secs)
+     * @return The ComponentFixture object associated with the ActionMenu class.
+     */
+    public ComponentFixture getActionMainMenu(String... xpathVars) {
+        String text = xpathVars[0];
+        String waitTime = xpathVars[1];
+        return find(ComponentFixture.class,
+                byXpath("///div[@accessiblename='" + text + "' and @class='ActionButton']"),
+                Duration.ofSeconds(Integer.parseInt(waitTime)));
+    }
 
     /**
      * Returns the ComponentFixture object associated with the ActionMenuItem class.

@@ -201,14 +201,6 @@ intellijPlatformTesting.runIde {
     }
 }
 
-//tasks.withType(Test).configureEach {
-//   useJUnitPlatform()
-//    testLogging {
-//        showStandardStreams = true
-//        exceptionFormat = 'full'
-//    }
-//}
-
 test {
         useJUnitPlatform()
         testLogging {
