@@ -190,7 +190,7 @@ public class UIBotTestUtils {
 //                "Waiting for the Liberty button on the main window pane stripe to be enabled",
 //                "The Liberty button on then main window pane stripe is not enabled",
 //                () -> projectFrame.isComponentEnabled(wpStripeButton));
-        clickOnWindowPaneStripeButton(remoteRobot, "Liberty");
+        clickOnSquareStripeButton(remoteRobot, "Liberty");
     }
 
     /**
@@ -237,8 +237,9 @@ public class UIBotTestUtils {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
 
         // Click on the Liberty toolbar to give it focus.
-        ComponentFixture libertyTWBar = projectFrame.getBaseLabel("Liberty", "10");
-        libertyTWBar.click();
+//        ComponentFixture libertyTWBar = projectFrame.getBaseLabel("Liberty", "10");
+//        libertyTWBar.click();
+        clickOnSquareStripeButton(remoteRobot, "Liberty");
 
         // Process the action.
         Exception error = null;
@@ -518,7 +519,7 @@ public class UIBotTestUtils {
      * @param StripeButtonName The name of the window pane stripe button.
      */
     public static void clickOnWindowPaneStripeButton(RemoteRobot remoteRobot, String StripeButtonName) {
-        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+//        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
 //        ComponentFixture wpStripeButton = projectFrame.getStripeButton(StripeButtonName, "10");
 //        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
 //                Duration.ofSeconds(1),
@@ -526,7 +527,7 @@ public class UIBotTestUtils {
 //                "The " + StripeButtonName + " button on then main window pane stripe is not enabled",
 //                () -> projectFrame.isComponentEnabled(wpStripeButton));
 //        wpStripeButton.click();
-        clickOnWindowPaneStripeButton(remoteRobot, "Liberty");
+        clickOnSquareStripeButton(remoteRobot, "Liberty");
     }
 
     /**
@@ -1607,11 +1608,11 @@ public class UIBotTestUtils {
 //                ComponentFixture searchFixture = projectFrame.getActionMenuItem("Search Everywhere");
 //                searchFixture.click();
 //
-//                // Click on the Actions tab
-//                ComponentFixture actionsTabFixture = projectFrame.getSETabLabel("Actions");
-//                actionsTabFixture.click();
-                clickOnMainMenuSubList(remoteRobot, "Navigate", "Search Everywhere", "Actions");
 
+                clickOnMainMenuList(remoteRobot, "Navigate", "Search Everywhere");
+                // Click on the Actions tab
+                ComponentFixture actionsTabFixture = projectFrame.getSETabLabel("Actions");
+                actionsTabFixture.click();
                 // Type the search string in the search dialog box.
                 JTextFieldFixture searchField = projectFrame.textField(JTextFieldFixture.Companion.byType(), Duration.ofSeconds(10));
                 searchField.click();
@@ -2162,9 +2163,9 @@ public class UIBotTestUtils {
     public static void runConfigUsingIconOnToolbar(RemoteRobot remoteRobot, ExecMode execMode) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
 
-        Locator locator = byXpath("//div[contains(@myaction.key, 'group.RunMenu.text')]");
+        Locator locator = byXpath("//div[@class='ActionButton' and @myaction='Run (Run selected configuration)']");
         if (execMode == ExecMode.DEBUG) {
-            locator = byXpath("//div[@myicon='startDebugger.svg']");
+            locator = byXpath("//div[@myicon='debug.svg']");
         }
 
         ActionButtonFixture iconButton = projectFrame.actionButton(locator, Duration.ofSeconds(10));
@@ -2291,7 +2292,7 @@ public class UIBotTestUtils {
             debugStripe.doubleClick();
         }
 
-        Locator locator = byXpath("//div[contains(@myvisibleactions, 'Get')]//div[contains(@myaction.key, 'action.Stop.text')]");
+        Locator locator = byXpath("//div[@class='MyNonOpaquePanel']//div[@myicon='stop.svg']");
         ActionButtonFixture stopButton = projectFrame.actionButton(locator, Duration.ofSeconds(5));
         stopButton.click();
     }
@@ -2496,6 +2497,18 @@ public class UIBotTestUtils {
             okButton.click();
         }
     }
+    public static void clickOnSquareStripeButton(RemoteRobot remoteRobot, String fileName) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+
+        try {
+            String xPath = "//div[@accessiblename='" + fileName + "' and @class='SquareStripeButton']";
+            ComponentFixture actionButton = projectFrame.getActionButton(xPath, "10");
+            actionButton.click();
+
+        } catch (WaitForConditionTimeoutException e) {
+            // file not open, nothing to do
+        }
+    }
     public static void clickOnMainMenu(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
 
@@ -2504,18 +2517,19 @@ public class UIBotTestUtils {
             menuButton.click();
 
         } catch (WaitForConditionTimeoutException e) {
-            // file not open, nothing to do
+            System.out.println(e.getMessage());
         }
     }
+
     public static void clickOnMainMenuList(RemoteRobot remoteRobot, String firstAction , String secondAction) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
 
         try {
            clickOnMainMenu(remoteRobot);
-            var firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']") , Duration.ofSeconds(20));
+            var firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']") , Duration.ofSeconds(30));
             firstMenuPopup.findText(firstAction).moveMouse();
 
-            var secondMenuPopup = firstMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(20));
+            var secondMenuPopup = firstMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
             secondMenuPopup.findText(secondAction).click();
 
         } catch (WaitForConditionTimeoutException e) {
@@ -2527,14 +2541,14 @@ public class UIBotTestUtils {
 
         try {
             clickOnMainMenu(remoteRobot);
-            var firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(20));
+            var firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
             firstMenuPopup.findText(firstAction).moveMouse();
 
-            var secondMenuPopup = firstMenuPopup.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(20));
+            var secondMenuPopup = firstMenuPopup.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
             secondMenuPopup.findText(secondAction).moveMouse();
 
-            var thirdMenuPopup = secondMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(20));
-            thirdMenuPopup.findText(thirdAction).moveMouse();
+            var thirdMenuPopup = secondMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
+            thirdMenuPopup.findText(thirdAction).click();
 
         } catch (WaitForConditionTimeoutException e) {
             // file not open, nothing to do

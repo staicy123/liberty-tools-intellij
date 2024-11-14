@@ -197,7 +197,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
         String text = xpathVars[0];
         String waitTime = xpathVars[1];
         return find(ComponentFixture.class,
-                byXpath("//div[@class='StripeButton' and @text='" + text + "']"),
+                byXpath("//div[@tooltiptext='Debug']"),
                 Duration.ofSeconds(Integer.parseInt(waitTime)));
     }
 
@@ -210,7 +210,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
     public ComponentFixture getSETabLabel(String... xpathVars) {
         String text = xpathVars[0];
         return find(ComponentFixture.class,
-                byXpath("//div[@class='SETabLabel' and @text='" + text + "']"),
+                byXpath("//div[@text='" + text + "']"),
                 Duration.ofSeconds(10));
     }
 
@@ -337,7 +337,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
      * @return The ContainerFixture object associated with the RunConfigurationsComboBoxButton class.
      */
     public ComponentFixture getRunConfigurationsComboBoxButton() {
-        return find(ContainerFixture.class, byXpath("//div[@class='RunConfigurationsComboBoxButton']"), Duration.ofSeconds(5));
+        return find(ContainerFixture.class, byXpath("//div[@class='ActionButtonWithText']"), Duration.ofSeconds(5));
     }
 
     /**
