@@ -170,6 +170,7 @@ tasks.register('copyDeps', Copy) {
 
 
 runIde {
+
     jvmArgumentProviders.add({
         [
                 "--add-exports",
@@ -179,8 +180,10 @@ runIde {
 }
 
 intellijPlatformTesting.runIde {
+
     runIdeForUiTests {
         task {
+
             jvmArgumentProviders.add({
                 [
                         "-Drobot-server.port=8082",

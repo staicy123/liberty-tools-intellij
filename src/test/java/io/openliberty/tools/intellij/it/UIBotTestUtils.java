@@ -237,9 +237,9 @@ public class UIBotTestUtils {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
 
         // Click on the Liberty toolbar to give it focus.
-//        ComponentFixture libertyTWBar = projectFrame.getBaseLabel("Liberty", "10");
-//        libertyTWBar.click();
-        clickOnSquareStripeButton(remoteRobot, "Liberty");
+       ComponentFixture libertyTWBar = projectFrame.getBaseLabel("Liberty", "10");
+        libertyTWBar.click();
+      //  clickOnSquareStripeButton(remoteRobot, "Liberty");
 
         // Process the action.
         Exception error = null;
@@ -783,7 +783,7 @@ public class UIBotTestUtils {
 
         Keyboard keyboard = new Keyboard(remoteRobot);
 
-        Locator locator = byXpath("//div[@class='EditorWindowTopComponent']//div[@class='EditorComponentImpl']");
+        Locator locator = byXpath("//div[@class='EditorComponentImpl']");
         clickOnFileTab(remoteRobot, hoverFile);
         EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
 
