@@ -197,7 +197,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
         String text = xpathVars[0];
         String waitTime = xpathVars[1];
         return find(ComponentFixture.class,
-                byXpath("//div[@tooltiptext='Debug']"),
+                byXpath("//div[@tooltiptext='" + text + "']"),
                 Duration.ofSeconds(Integer.parseInt(waitTime)));
     }
 

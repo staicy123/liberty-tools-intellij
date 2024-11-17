@@ -519,15 +519,14 @@ public class UIBotTestUtils {
      * @param StripeButtonName The name of the window pane stripe button.
      */
     public static void clickOnWindowPaneStripeButton(RemoteRobot remoteRobot, String StripeButtonName) {
-//        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-//        ComponentFixture wpStripeButton = projectFrame.getStripeButton(StripeButtonName, "10");
-//        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-//                Duration.ofSeconds(1),
-//                "Waiting for the " + StripeButtonName + " button on the main window pane stripe to be enabled",
-//                "The " + StripeButtonName + " button on then main window pane stripe is not enabled",
-//                () -> projectFrame.isComponentEnabled(wpStripeButton));
-//        wpStripeButton.click();
-        clickOnSquareStripeButton(remoteRobot, "Liberty");
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+        ComponentFixture wpStripeButton = projectFrame.getStripeButton(StripeButtonName, "10");
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+                Duration.ofSeconds(1),
+                "Waiting for the " + StripeButtonName + " button on the main window pane stripe to be enabled",
+                "The " + StripeButtonName + " button on then main window pane stripe is not enabled",
+                () -> projectFrame.isComponentEnabled(wpStripeButton));
+        wpStripeButton.click();
     }
 
     /**

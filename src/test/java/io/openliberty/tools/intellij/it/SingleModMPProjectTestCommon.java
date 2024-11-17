@@ -85,6 +85,7 @@ public abstract class SingleModMPProjectTestCommon {
     @Video
     public void testOpenBuildFileActionUsingPopUpMenu() {
         String editorTabName = getBuildFileName() + " (" + getSmMPProjectName() + ")";
+       // String editorTabName = getBuildFileName();
 
         // Close the editor tab if it was previously opened.
         UIBotTestUtils.closeFileEditorTab(remoteRobot, editorTabName, "5");
