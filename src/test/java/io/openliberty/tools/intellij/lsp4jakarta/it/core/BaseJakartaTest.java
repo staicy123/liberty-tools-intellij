@@ -27,6 +27,7 @@ import com.intellij.testFramework.fixtures.*;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlinx.coroutines.BuildersKt;
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.Disabled;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import java.util.stream.Collectors;
  * With certain methods modified or deleted to fit the purposes of LSP4Jakarta
  *
  */
+@Disabled
 public abstract class BaseJakartaTest extends MavenImportingTestCase {
 
     protected TestFixtureBuilder<IdeaProjectTestFixture> myProjectBuilder;

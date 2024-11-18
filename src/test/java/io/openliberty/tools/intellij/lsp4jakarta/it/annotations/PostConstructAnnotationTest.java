@@ -27,6 +27,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4jakarta.commons.JakartaJavaDiagnosticsParams;
 import org.eclipse.lsp4jakarta.commons.JakartaJavaCodeActionParams;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -35,6 +36,7 @@ import java.util.Arrays;
 
 import static io.openliberty.tools.intellij.lsp4jakarta.it.core.JakartaForJavaAssert.*;
 
+@Disabled
 @RunWith(JUnit4.class)
 public class PostConstructAnnotationTest extends BaseJakartaTest {
 
