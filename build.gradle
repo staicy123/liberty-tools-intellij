@@ -133,6 +133,11 @@ dependencies {
     implementation files(new File(buildDir, 'server')) {
         builtBy 'copyDeps'
     }
+    test {
+        java {
+            exclude 'io/openliberty/tools/intellij/lsp4jakarta.it/**'
+        }
+    }
     intellijPlatform {
         // For a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
         create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
