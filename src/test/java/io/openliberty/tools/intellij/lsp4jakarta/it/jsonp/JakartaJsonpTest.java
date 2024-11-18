@@ -26,14 +26,13 @@ import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4jakarta.commons.JakartaJavaDiagnosticsParams;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.File;
 import java.util.Arrays;
 
-@Disabled
+
 @RunWith(JUnit4.class)
 public class JakartaJsonpTest extends BaseJakartaTest {
 

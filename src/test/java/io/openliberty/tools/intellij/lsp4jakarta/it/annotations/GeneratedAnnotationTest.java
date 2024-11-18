@@ -32,7 +32,6 @@ import org.junit.runners.JUnit4;
 import java.io.File;
 import java.util.Arrays;
 
-@Disabled
 @RunWith(JUnit4.class)
 public class GeneratedAnnotationTest extends BaseJakartaTest {
 

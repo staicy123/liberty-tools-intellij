@@ -30,7 +30,6 @@ import org.eclipse.lsp4jakarta.commons.JakartaJavaDiagnosticsParams;
 import org.eclipse.lsp4jakarta.commons.JakartaJavaCodeActionParams;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -39,7 +38,6 @@ import java.util.Arrays;
 
 import static io.openliberty.tools.intellij.lsp4jakarta.it.core.JakartaForJavaAssert.*;
 
-@Disabled
 @RunWith(JUnit4.class)
 public class ManagedBeanTest extends BaseJakartaTest {
 

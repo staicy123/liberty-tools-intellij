@@ -36,7 +36,6 @@ import java.util.Arrays;
 
 import static io.openliberty.tools.intellij.lsp4jakarta.it.core.JakartaForJavaAssert.*;
 
-@Disabled
 @RunWith(JUnit4.class)
 public class PostConstructAnnotationTest extends BaseJakartaTest {
 

@@ -29,14 +29,12 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4jakarta.commons.JakartaJavaDiagnosticsParams;
 import org.eclipse.lsp4jakarta.commons.JakartaJavaCodeActionParams;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.File;
 import java.util.Arrays;
 
-@Disabled
 @RunWith(JUnit4.class)
 public class MultipleConstructorInjectTest extends BaseJakartaTest {
 
