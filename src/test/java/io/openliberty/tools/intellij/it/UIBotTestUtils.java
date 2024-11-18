@@ -2506,7 +2506,7 @@ public class UIBotTestUtils {
             var thirdMenuPopup = secondMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
             thirdMenuPopup.findText(thirdAction).click();
         } catch (WaitForConditionTimeoutException e) {
-            System.err.println("ERROR: Timeout while trying to find or interact with menu items");
+            System.err.println("ERROR: Timeout while trying to find or interact with menu items.");
         }
     }
 }
