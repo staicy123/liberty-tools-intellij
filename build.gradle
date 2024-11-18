@@ -168,7 +168,6 @@ runIde {
 
 test {
     useJUnitPlatform()
-    exclude 'src/test/java/io/openliberty/tools/intellij/lsp4jakarta/it/**'
     testLogging {
         showStandardStreams = true
         exceptionFormat = 'full'
