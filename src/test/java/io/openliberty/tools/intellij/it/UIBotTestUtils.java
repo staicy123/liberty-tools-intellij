@@ -2458,7 +2458,7 @@ public class UIBotTestUtils {
         try {
             var menuButton = projectFrame.find(ComponentFixture.class, byXpath("//div[@tooltiptext='Main Menu']"), Duration.ofSeconds(30));
             menuButton.click();
-            TestUtils.sleepAndIgnoreException(3);
+            TestUtils.sleepAndIgnoreException(5);
         } catch (WaitForConditionTimeoutException e) {
             System.err.println("ERROR: Main menu button not found within the given timeout.");
 
@@ -2480,10 +2480,10 @@ public class UIBotTestUtils {
             clickOnMainMenu(remoteRobot);
             var firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']") , Duration.ofSeconds(30));
             firstMenuPopup.findText(firstAction).moveMouse();
-            TestUtils.sleepAndIgnoreException(3);
+            TestUtils.sleepAndIgnoreException(6);
             var secondMenuPopup = firstMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
             secondMenuPopup.findText(secondAction).click();
-            TestUtils.sleepAndIgnoreException(3);
+            TestUtils.sleepAndIgnoreException(6);
         } catch (WaitForConditionTimeoutException e) {
             System.err.println("ERROR: Timeout while trying to find or interact with menu items.");
         }
@@ -2505,13 +2505,13 @@ public class UIBotTestUtils {
             clickOnMainMenu(remoteRobot);
             var firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
             firstMenuPopup.findText(firstAction).moveMouse();
-            TestUtils.sleepAndIgnoreException(3);
+            TestUtils.sleepAndIgnoreException(5);
             var secondMenuPopup = firstMenuPopup.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
             secondMenuPopup.findText(secondAction).moveMouse();
-            TestUtils.sleepAndIgnoreException(3);
+            TestUtils.sleepAndIgnoreException(5);
             var thirdMenuPopup = secondMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
             thirdMenuPopup.findText(thirdAction).click();
-            TestUtils.sleepAndIgnoreException(3);
+            TestUtils.sleepAndIgnoreException(5);
         } catch (WaitForConditionTimeoutException e) {
             System.err.println("ERROR: Timeout while trying to find or interact with menu items.");
         }
