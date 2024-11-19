@@ -1398,7 +1398,7 @@ public class UIBotTestUtils {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
         clickOnMainMenuList(remoteRobot, "Edit", "Select All");
-
+        TestUtils.sleepAndIgnoreException(5);
         // Copy the content.
         clickOnMainMenuList(remoteRobot, "Edit", "Copy");
     }
@@ -2151,6 +2151,7 @@ public class UIBotTestUtils {
                         continue;
                     }
                     if (processEntries) {
+                        TestUtils.sleepAndIgnoreException(5);
                         // Click on the first configuration in the tree only.
                         if (!firstEntryClicked) {
                             treeEntry.click();
@@ -2457,6 +2458,7 @@ public class UIBotTestUtils {
         try {
             var menuButton = projectFrame.find(ComponentFixture.class, byXpath("//div[@tooltiptext='Main Menu']"), Duration.ofSeconds(30));
             menuButton.click();
+            TestUtils.sleepAndIgnoreException(5);
         } catch (WaitForConditionTimeoutException e) {
             System.err.println("ERROR: Main menu button not found within the given timeout.");
 
@@ -2478,8 +2480,10 @@ public class UIBotTestUtils {
             clickOnMainMenu(remoteRobot);
             var firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']") , Duration.ofSeconds(30));
             firstMenuPopup.findText(firstAction).moveMouse();
+            TestUtils.sleepAndIgnoreException(5);
             var secondMenuPopup = firstMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
             secondMenuPopup.findText(secondAction).click();
+            TestUtils.sleepAndIgnoreException(5);
         } catch (WaitForConditionTimeoutException e) {
             System.err.println("ERROR: Timeout while trying to find or interact with menu items.");
         }
@@ -2501,10 +2505,13 @@ public class UIBotTestUtils {
             clickOnMainMenu(remoteRobot);
             var firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
             firstMenuPopup.findText(firstAction).moveMouse();
+            TestUtils.sleepAndIgnoreException(5);
             var secondMenuPopup = firstMenuPopup.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
             secondMenuPopup.findText(secondAction).moveMouse();
+            TestUtils.sleepAndIgnoreException(5);
             var thirdMenuPopup = secondMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
             thirdMenuPopup.findText(thirdAction).click();
+            TestUtils.sleepAndIgnoreException(5);
         } catch (WaitForConditionTimeoutException e) {
             System.err.println("ERROR: Timeout while trying to find or interact with menu items.");
         }
