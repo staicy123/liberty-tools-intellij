@@ -2480,22 +2480,20 @@ public class UIBotTestUtils {
         try {
             clickOnMainMenu(remoteRobot);
             ContainerFixture firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']") , Duration.ofSeconds(30));
-            RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
                     Duration.ofSeconds(1),
                     "Waiting for first menu to get displayed",
                     "Timeout while trying to find or interact with menu first window items.",
                     firstMenuPopup::isShowing);
-          TestUtils.sleepAndIgnoreException(8);
             // Now that the element is available, move the mouse
             firstMenuPopup.findText(firstAction).moveMouse();
 
             ComponentFixture secondMenuPopup = firstMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
-            RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
                     Duration.ofSeconds(1),
-                    "Waiting for first menu to get displayed",
+                    "Waiting for second menu to get displayed",
                     "Timeout while trying to find or interact with menu second window items.",
                     secondMenuPopup::isShowing);
-            TestUtils.sleepAndIgnoreException(8);
             secondMenuPopup.findText(secondAction).click();
 
         } catch (WaitForConditionTimeoutException e) {
@@ -2519,28 +2517,25 @@ public class UIBotTestUtils {
         try {
             clickOnMainMenu(remoteRobot);
             ContainerFixture firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
-            RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
                     Duration.ofSeconds(1),
                     "Waiting for first menu to get displayed",
                     "Timeout while trying to find or interact with menu first window items.",
                     firstMenuPopup::isShowing);
-            TestUtils.sleepAndIgnoreException(8);
             firstMenuPopup.findText(firstAction).moveMouse();
             ContainerFixture secondMenuPopup = firstMenuPopup.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
-            RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
                     Duration.ofSeconds(1),
-                    "Waiting for first menu to get displayed",
+                    "Waiting for second menu to get displayed",
                     "Timeout while trying to find or interact with menu second window items.",
                     secondMenuPopup::isShowing);
-            TestUtils.sleepAndIgnoreException(8);
             secondMenuPopup.findText(secondAction).moveMouse();
             ComponentFixture thirdMenuPopup = secondMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
-            RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
                     Duration.ofSeconds(1),
-                    "Waiting for first menu to get displayed",
+                    "Waiting for third menu to get displayed",
                     "Timeout while trying to find or interact with menu third window items.",
                     thirdMenuPopup::isShowing);
-            TestUtils.sleepAndIgnoreException(8);
             thirdMenuPopup.findText(thirdAction).click();
         } catch (WaitForConditionTimeoutException e) {
             System.err.println("ERROR: Timeout while trying to find or interact with menu items.");
