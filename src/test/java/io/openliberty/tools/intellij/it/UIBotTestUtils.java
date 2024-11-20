@@ -2465,6 +2465,7 @@ public class UIBotTestUtils {
         }
     }
     /**
+     *
      * Clicks on the "Main Menu" and performs two actions in the subsequent menu popups.
      * The method first clicks the main menu, then locates and interacts with two successive menu items.
      * If any menu or action cannot be found within the timeout period, an error message is logged.
