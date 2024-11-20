@@ -351,7 +351,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
             menuButton.click();
             TestUtils.sleepAndIgnoreException(8);
         } catch (WaitForConditionTimeoutException e) {
-            System.err.println("ERROR: Main menu button not found within the given timeout.");
+            System.err.println("ERROR: Main menu button not found within given timeout.");
 
         }
     }
