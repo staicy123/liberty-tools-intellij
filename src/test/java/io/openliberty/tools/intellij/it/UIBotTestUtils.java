@@ -120,7 +120,7 @@ public class UIBotTestUtils {
             // From the project frame.
             ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
             commonFixture = projectFrame;
-            clickOnMainMenuList(remoteRobot, "File", "Open...");
+            projectFrame.clickOnMainMenuList(remoteRobot, "File", "Open...");
         }
 
         // Specify the project's path. The text field is pre-populated by default.
@@ -167,8 +167,8 @@ public class UIBotTestUtils {
                     thisWinButton::isEnabled);
             thisWinButton.click();
         }
-
-        clickOnMainMenu(remoteRobot);
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
+        projectFrame.clickOnMainMenu(remoteRobot);
 
         clickOnSquareStripeButton(remoteRobot, "Liberty");
     }
@@ -197,7 +197,7 @@ public class UIBotTestUtils {
     public static void closeProjectFrame(RemoteRobot remoteRobot) {
         // Click on File on the Menu bar.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        clickOnMainMenuList(remoteRobot, "File", "Close Project");
+        projectFrame.clickOnMainMenuList(remoteRobot, "File", "Close Project");
     }
 
     /**
@@ -712,7 +712,7 @@ public class UIBotTestUtils {
      */
     public static void closeAllEditorTabs(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        clickOnMainMenuSubList(remoteRobot, "Window", "Editor Tabs", "Close All Tabs");
+        projectFrame.clickOnMainMenuSubList(remoteRobot, "Window", "Editor Tabs", "Close All Tabs");
     }
 
     /**
@@ -1397,10 +1397,10 @@ public class UIBotTestUtils {
     public static void copyWindowContent(RemoteRobot remoteRobot) {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-        clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
         TestUtils.sleepAndIgnoreException(5);
         // Copy the content.
-        clickOnMainMenuList(remoteRobot, "Edit", "Copy");
+        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Copy");
     }
 
     /**
@@ -1411,9 +1411,9 @@ public class UIBotTestUtils {
     public static void clearWindowContent(RemoteRobot remoteRobot) {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-        clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
         // Delete/Clear the content.
-        clickOnMainMenuList(remoteRobot, "Edit", "Delete");
+        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Delete");
     }
 
     public static void pasteOnActiveWindow(RemoteRobot remoteRobot) {
@@ -1435,13 +1435,13 @@ public class UIBotTestUtils {
         }
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-        clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
 
         // Paste the content.
-        clickOnMainMenuSubList(remoteRobot, "Edit", "Paste", "Paste");
+        projectFrame.clickOnMainMenuSubList(remoteRobot, "Edit", "Paste", "Paste");
 
         // Save.
-        clickOnMainMenuList(remoteRobot, "File", "Save All");
+        projectFrame.clickOnMainMenuList(remoteRobot, "File", "Save All");
     }
 
     /**
@@ -1554,7 +1554,7 @@ public class UIBotTestUtils {
 
                 // Click on Navigate on the Menu bar.
                 ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
-                clickOnMainMenuList(remoteRobot, "Navigate", "Search Everywhere");
+                projectFrame.clickOnMainMenuList(remoteRobot, "Navigate", "Search Everywhere");
                 // Click on the Actions tab
                 ComponentFixture actionsTabFixture = projectFrame.getSETabLabel("Actions");
                 actionsTabFixture.click();
@@ -1818,7 +1818,7 @@ public class UIBotTestUtils {
      */
     public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
+        projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
 
         // Find the Run/Debug Configurations dialog.
         DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
@@ -2069,11 +2069,22 @@ public class UIBotTestUtils {
      */
     public static void selectConfigUsingMenu(RemoteRobot remoteRobot, String cfgName, ExecMode execMode) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        clickOnMainMenu(remoteRobot);
-        ContainerFixture firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']") , Duration.ofSeconds(20));
-        firstMenuPopup.findText("Run").moveMouse();
-        ComponentFixture secondMenuPopup = firstMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(20));
-        secondMenuPopup.findText(execMode == ExecMode.DEBUG ? "Debug..." : "Run...").click();
+        projectFrame.clickOnMainMenu(remoteRobot);
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+                Duration.ofSeconds(1),
+                "Waiting for first menu to get displayed",
+                "Timeout while trying to find or interact with menu first window items.",
+                () -> !(projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"))).isEmpty());
+        List<ContainerFixture> firstMenuPopup = projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
+        firstMenuPopup.get(0).findText("Run").moveMouse();
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+                Duration.ofSeconds(1),
+                "Waiting for second menu to get displayed",
+                "Timeout while trying to find or interact with menu second window items.",
+                () -> !firstMenuPopup.get(0).findAll(ContainerFixture.class,
+                        byXpath("//div[@class='HeavyWeightWindow']")).isEmpty());
+        List<ContainerFixture> secondMenuPopup =firstMenuPopup.get(0).findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
+        secondMenuPopup.get(0).findText(execMode == ExecMode.DEBUG ? "Debug..." : "Run...").click();
 
         // Retrieve the list of configs from the config list window.
         ComponentFixture cfgSelectWindow = projectFrame.getMyList();
@@ -2119,7 +2130,7 @@ public class UIBotTestUtils {
      */
     public static void deleteLibertyRunConfigurations(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
+        projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
 
         // The Run/Debug configurations dialog could resize and reposition icons. Retry in case of a failure.
         int maxRetries = 3;
@@ -2447,98 +2458,102 @@ public class UIBotTestUtils {
         }
     }
 
-    /**
-     * Attempts to find and click the "Main Menu" button in the project frame.
-     * If the button is not found within the timeout, an error message is logged.
-     * @param remoteRobot the instance used to interact with the UI.
-     *
-     */
-    public static void clickOnMainMenu(RemoteRobot remoteRobot) {
-        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        try {
-            var menuButton = projectFrame.find(ComponentFixture.class, byXpath("//div[@tooltiptext='Main Menu']"), Duration.ofSeconds(30));
-            menuButton.click();
-            TestUtils.sleepAndIgnoreException(5);
-        } catch (WaitForConditionTimeoutException e) {
-            System.err.println("ERROR: Main menu button not found within the given timeout.");
+//    /**
+//     * Attempts to find and click the "Main Menu" button in the project frame.
+//     * If the button is not found within the timeout, an error message is logged.
+//     * @param remoteRobot the instance used to interact with the UI.
+//     *
+//     */
+//    public static void clickOnMainMenu(RemoteRobot remoteRobot) {
+//        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+//        try {
+//            var menuButton = projectFrame.find(ComponentFixture.class, byXpath("//div[@tooltiptext='Main Menu']"), Duration.ofSeconds(30));
+//            menuButton.click();
+//            TestUtils.sleepAndIgnoreException(5);
+//        } catch (WaitForConditionTimeoutException e) {
+//            System.err.println("ERROR: Main menu button not found within the given timeout.");
+//
+//        }
+//    }
+//    /**
+//     *
+//     * Clicks on the "Main Menu" and performs two actions in the subsequent menu popups.
+//     * The method first clicks the main menu, then locates and interacts with two successive menu items.
+//     * If any menu or action cannot be found within the timeout period, an error message is logged.
+//     *
+//     * @param remoteRobot the instance used to interact with the UI.
+//     * @param firstAction the text of the first action to be selected in the first menu.
+//     * @param secondAction the text of the second action to be selected in the second menu.
+//     *
+//     */
+//    public static void clickOnMainMenuList(RemoteRobot remoteRobot, String firstAction , String secondAction) {
+//        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+//        try {
+//            clickOnMainMenu(remoteRobot);
+//            ContainerFixture firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']") , Duration.ofSeconds(30));
+//            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+//                    Duration.ofSeconds(1),
+//                    "Waiting for first menu to get displayed",
+//                    "Timeout while trying to find or interact with menu first window items.",
+//                    firstMenuPopup::isShowing);
+//            // Now that the element is available, move the mouse
+//            firstMenuPopup.findText(firstAction).moveMouse();
+//
+//            ComponentFixture secondMenuPopup = firstMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
+//            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+//                    Duration.ofSeconds(1),
+//                    "Waiting for second menu to get displayed",
+//                    "Timeout while trying to find or interact with menu second window items.",
+//                    secondMenuPopup::isShowing);
+//            secondMenuPopup.findText(secondAction).click();
+//
+//        } catch (WaitForConditionTimeoutException e) {
+//            System.err.println("ERROR: Timeout while trying to find or interact with menu items.");
+//        }
+//    }
+//
+//    /**
+//     * Clicks on the "Main Menu" and performs three actions in the subsequent menu popups.
+//     * The method first clicks the main menu, then locates and interacts with three successive menu items.
+//     * If any menu or action cannot be found within the timeout period, an error message is logged.
+//     *
+//     * @param remoteRobot the instance used to interact with the UI.
+//     * @param firstAction the text of the first action to be selected in the first menu.
+//     * @param secondAction the text of the second action to be selected in the second menu.
+//     * @param thirdAction the text of the third action to be selected in the third menu.
+//     *
+//     */
+//    public static void clickOnMainMenuSubList(RemoteRobot remoteRobot, String firstAction, String secondAction, String thirdAction) {
+//        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+//        try {
+//            clickOnMainMenu(remoteRobot);
+//            ContainerFixture firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
+//            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+//                    Duration.ofSeconds(1),
+//                    "Waiting for first menu to get displayed",
+//                    "Timeout while trying to find or interact with menu first window items.",
+//                    () -> !findAll(ComponentFixture.class,
+//                            byXpath("//div[@class='HeavyWeightWindow']")).isEmpty());
+//            List<ComponentFixture> list = findAll(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
+//            return list.get(0);
+//            firstMenuPopup.findText(firstAction).moveMouse();
+//            ContainerFixture secondMenuPopup = firstMenuPopup.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
+//            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+//                    Duration.ofSeconds(1),
+//                    "Waiting for second menu to get displayed",
+//                    "Timeout while trying to find or interact with menu second window items.",
+//                    secondMenuPopup::isShowing);
+//            secondMenuPopup.findText(secondAction).moveMouse();
+//            ComponentFixture thirdMenuPopup = secondMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
+//            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+//                    Duration.ofSeconds(1),
+//                    "Waiting for third menu to get displayed",
+//                    "Timeout while trying to find or interact with menu third window items.",
+//                    thirdMenuPopup::isShowing);
+//            thirdMenuPopup.findText(thirdAction).click();
+//        } catch (WaitForConditionTimeoutException e) {
+//            System.err.println("ERROR: Timeout while trying to find or interact with menu items.");
+//        }
+//    }
 
-        }
-    }
-    /**
-     *
-     * Clicks on the "Main Menu" and performs two actions in the subsequent menu popups.
-     * The method first clicks the main menu, then locates and interacts with two successive menu items.
-     * If any menu or action cannot be found within the timeout period, an error message is logged.
-     *
-     * @param remoteRobot the instance used to interact with the UI.
-     * @param firstAction the text of the first action to be selected in the first menu.
-     * @param secondAction the text of the second action to be selected in the second menu.
-     *
-     */
-    public static void clickOnMainMenuList(RemoteRobot remoteRobot, String firstAction , String secondAction) {
-        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        try {
-            clickOnMainMenu(remoteRobot);
-            ContainerFixture firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']") , Duration.ofSeconds(30));
-            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-                    Duration.ofSeconds(1),
-                    "Waiting for first menu to get displayed",
-                    "Timeout while trying to find or interact with menu first window items.",
-                    firstMenuPopup::isShowing);
-            // Now that the element is available, move the mouse
-            firstMenuPopup.findText(firstAction).moveMouse();
-
-            ComponentFixture secondMenuPopup = firstMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
-            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-                    Duration.ofSeconds(1),
-                    "Waiting for second menu to get displayed",
-                    "Timeout while trying to find or interact with menu second window items.",
-                    secondMenuPopup::isShowing);
-            secondMenuPopup.findText(secondAction).click();
-
-        } catch (WaitForConditionTimeoutException e) {
-            System.err.println("ERROR: Timeout while trying to find or interact with menu items.");
-        }
-    }
-
-    /**
-     * Clicks on the "Main Menu" and performs three actions in the subsequent menu popups.
-     * The method first clicks the main menu, then locates and interacts with three successive menu items.
-     * If any menu or action cannot be found within the timeout period, an error message is logged.
-     *
-     * @param remoteRobot the instance used to interact with the UI.
-     * @param firstAction the text of the first action to be selected in the first menu.
-     * @param secondAction the text of the second action to be selected in the second menu.
-     * @param thirdAction the text of the third action to be selected in the third menu.
-     *
-     */
-    public static void clickOnMainMenuSubList(RemoteRobot remoteRobot, String firstAction, String secondAction, String thirdAction) {
-        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        try {
-            clickOnMainMenu(remoteRobot);
-            ContainerFixture firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
-            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-                    Duration.ofSeconds(1),
-                    "Waiting for first menu to get displayed",
-                    "Timeout while trying to find or interact with menu first window items.",
-                    firstMenuPopup::isShowing);
-            firstMenuPopup.findText(firstAction).moveMouse();
-            ContainerFixture secondMenuPopup = firstMenuPopup.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
-            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-                    Duration.ofSeconds(1),
-                    "Waiting for second menu to get displayed",
-                    "Timeout while trying to find or interact with menu second window items.",
-                    secondMenuPopup::isShowing);
-            secondMenuPopup.findText(secondAction).moveMouse();
-            ComponentFixture thirdMenuPopup = secondMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
-            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-                    Duration.ofSeconds(1),
-                    "Waiting for third menu to get displayed",
-                    "Timeout while trying to find or interact with menu third window items.",
-                    thirdMenuPopup::isShowing);
-            thirdMenuPopup.findText(thirdAction).click();
-        } catch (WaitForConditionTimeoutException e) {
-            System.err.println("ERROR: Timeout while trying to find or interact with menu items.");
-        }
-    }
 }
