@@ -276,7 +276,7 @@ public class BeanValidationTest extends BaseJakartaTest {
         assertJavaCodeAction(codeActionParams4, utils, ca5);
     }
 
-   // @Test
+    @Test
     public void methodConstraintValidation() throws Exception {
         Module module = createMavenModule(new File("src/test/resources/projects/maven/jakarta-sample"));
         IPsiUtils utils = PsiUtilsLSImpl.getInstance(getProject());
