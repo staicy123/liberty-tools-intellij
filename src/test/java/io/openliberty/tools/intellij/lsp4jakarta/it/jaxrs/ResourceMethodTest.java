@@ -38,7 +38,7 @@ import java.util.Arrays;
 @RunWith(JUnit4.class)
 public class ResourceMethodTest extends BaseJakartaTest {
 
-   // @Test
+   @Test
     public void NonPublicMethod() throws Exception {
         Module module = createMavenModule(new File("src/test/resources/projects/maven/jakarta-sample"));
         IPsiUtils utils = PsiUtilsLSImpl.getInstance(getProject());
