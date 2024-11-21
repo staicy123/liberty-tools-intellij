@@ -17,6 +17,7 @@ import com.intellij.remoterobot.utils.RepeatUtilsKt;
 import com.intellij.remoterobot.utils.WaitForConditionTimeoutException;
 import com.intellij.ui.HyperlinkLabel;
 import io.openliberty.tools.intellij.it.TestUtils;
+import io.openliberty.tools.intellij.it.UIBotTestUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -367,6 +368,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
      *
      */
     public void clickOnMainMenuList(RemoteRobot remoteRobot, String firstAction , String secondAction) {
+        UIBotTestUtils.waitForIndexing(remoteRobot);
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         try {
             clickOnMainMenu(remoteRobot);
