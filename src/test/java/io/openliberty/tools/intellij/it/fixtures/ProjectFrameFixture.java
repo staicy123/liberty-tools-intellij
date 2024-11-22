@@ -12,18 +12,19 @@ package io.openliberty.tools.intellij.it.fixtures;
 import com.intellij.remoterobot.RemoteRobot;
 import com.intellij.remoterobot.data.RemoteComponent;
 import com.intellij.remoterobot.fixtures.*;
+import com.intellij.remoterobot.fixtures.dataExtractor.RemoteText;
 import com.intellij.remoterobot.search.locators.Locator;
 import com.intellij.remoterobot.utils.RepeatUtilsKt;
 import com.intellij.remoterobot.utils.WaitForConditionTimeoutException;
-import com.intellij.ui.HyperlinkLabel;
+
 import io.openliberty.tools.intellij.it.TestUtils;
-import io.openliberty.tools.intellij.it.UIBotTestUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.util.List;
 
 import static com.intellij.remoterobot.search.locators.Locators.byXpath;
+import static io.openliberty.tools.intellij.it.UIBotTestUtils.findTextInListOutputPanel;
 
 /**
  * Project IDE frame.

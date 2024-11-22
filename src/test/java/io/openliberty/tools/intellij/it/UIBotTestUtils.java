@@ -22,6 +22,8 @@ import io.openliberty.tools.intellij.it.fixtures.WelcomeFrameFixture;
 import org.assertj.swing.core.MouseButton;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -120,7 +122,8 @@ public class UIBotTestUtils {
             // From the project frame.
             ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
             commonFixture = projectFrame;
-            projectFrame.clickOnMainMenuList(remoteRobot, "File", "Open...");
+           // projectFrame.clickOnMainMenuList(remoteRobot, "File", "Open...");
+            runSearchEverywherePanel(remoteRobot, "Open...", 4);
         }
 
         // Specify the project's path. The text field is pre-populated by default.
@@ -197,7 +200,8 @@ public class UIBotTestUtils {
     public static void closeProjectFrame(RemoteRobot remoteRobot) {
         // Click on File on the Menu bar.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        projectFrame.clickOnMainMenuList(remoteRobot, "File", "Close Project");
+       // projectFrame.clickOnMainMenuList(remoteRobot, "File", "Close Project");
+        runSearchEverywherePanel(remoteRobot, "Close Project", 4);
     }
 
     /**
@@ -712,7 +716,8 @@ public class UIBotTestUtils {
      */
     public static void closeAllEditorTabs(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        projectFrame.clickOnMainMenuSubList(remoteRobot, "Window", "Editor Tabs", "Close All Tabs");
+       // projectFrame.clickOnMainMenuSubList(remoteRobot, "Window", "Editor Tabs", "Close All Tabs");
+        runSearchEverywherePanel(remoteRobot, "Close All Tabs", 4);
     }
 
     /**
@@ -1397,10 +1402,12 @@ public class UIBotTestUtils {
     public static void copyWindowContent(RemoteRobot remoteRobot) {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+       // projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+        runSearchEverywherePanel(remoteRobot, "Select All", 4);
         TestUtils.sleepAndIgnoreException(5);
         // Copy the content.
-        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Copy");
+       // projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Copy");
+        runSearchEverywherePanel(remoteRobot, "Copy", 4);
     }
 
     /**
@@ -1411,9 +1418,11 @@ public class UIBotTestUtils {
     public static void clearWindowContent(RemoteRobot remoteRobot) {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+       // projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+        runSearchEverywherePanel(remoteRobot, "Select All", 4);
         // Delete/Clear the content.
-        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Delete");
+      //  projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Delete");
+        runSearchEverywherePanel(remoteRobot, "Delete", 4);
     }
 
     public static void pasteOnActiveWindow(RemoteRobot remoteRobot) {
@@ -1435,13 +1444,16 @@ public class UIBotTestUtils {
         }
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+       // projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+        runSearchEverywherePanel(remoteRobot, "Select All", 4);
 
         // Paste the content.
-        projectFrame.clickOnMainMenuSubList(remoteRobot, "Edit", "Paste", "Paste");
+      //  projectFrame.clickOnMainMenuSubList(remoteRobot, "Edit", "Paste", "Paste");
+        runSearchEverywherePanel(remoteRobot, "Paste", 4);
 
         // Save.
-        projectFrame.clickOnMainMenuList(remoteRobot, "File", "Save All");
+       // projectFrame.clickOnMainMenuList(remoteRobot, "File", "Save All");
+        runSearchEverywherePanel(remoteRobot, "Save All", 4);
     }
 
     /**
@@ -1554,31 +1566,10 @@ public class UIBotTestUtils {
 
                 // Click on Navigate on the Menu bar.
                 ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
-                projectFrame.clickOnMainMenuList(remoteRobot, "Navigate", "Search Everywhere");
+             //   projectFrame.clickOnMainMenuList(remoteRobot, "Navigate", "Search Everywhere");
+                clickSearchEverywhereAction(remoteRobot);
                 // Click on the Actions tab
-                ComponentFixture actionsTabFixture = projectFrame.getSETabLabel("Actions");
-                actionsTabFixture.click();
-
-                // Type the search string in the search dialog box.
-                JTextFieldFixture searchField = projectFrame.textField(JTextFieldFixture.Companion.byType(), Duration.ofSeconds(10));
-                searchField.click();
-                searchField.setText(action);
-                TestUtils.sleepAndIgnoreException(1); // allow search time to resolve
-
-                // Wait for the desired action to show in the search output frame and click on it.
-                RepeatUtilsKt.waitFor(Duration.ofSeconds(20),
-                        Duration.ofSeconds(1),
-                        "Waiting for the search to filter and show " + action + " in search output",
-                        "The search did not filter or show " + action + " in the search output",
-                        () -> findTextInListOutputPanel(projectFrame, action) != null);
-
-                RemoteText foundAction = findTextInListOutputPanel(projectFrame, action);
-                if (foundAction != null) {
-                    foundAction.click();
-                } else {
-                    throw new RuntimeException("Search everywhere found " + action + ", but it can no longer be found after a subsequent attempt to find it.");
-                }
-
+                clickOnActionButton(projectFrame, action);
                 // If the Liberty: Start... action was selected, make sure the Edit Configuration dialog is displayed.
                 if (action.equals("Liberty: Start...")) {
                     // This call will fail if the expected dialog is not displayed.
@@ -1818,7 +1809,8 @@ public class UIBotTestUtils {
      */
     public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
+     //   projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
+        runSearchEverywherePanel(remoteRobot, "Edit Configurations...", 4);
 
         // Find the Run/Debug Configurations dialog.
         DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
@@ -2130,7 +2122,8 @@ public class UIBotTestUtils {
      */
     public static void deleteLibertyRunConfigurations(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
+       // projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
+        runSearchEverywherePanel(remoteRobot, "Edit Configurations...", 4);
 
         // The Run/Debug configurations dialog could resize and reposition icons. Retry in case of a failure.
         int maxRetries = 3;
@@ -2459,102 +2452,65 @@ public class UIBotTestUtils {
         }
     }
 
-//    /**
-//     * Attempts to find and click the "Main Menu" button in the project frame.
-//     * If the button is not found within the timeout, an error message is logged.
-//     * @param remoteRobot the instance used to interact with the UI.
-//     *
-//     */
-//    public static void clickOnMainMenu(RemoteRobot remoteRobot) {
-//        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-//        try {
-//            var menuButton = projectFrame.find(ComponentFixture.class, byXpath("//div[@tooltiptext='Main Menu']"), Duration.ofSeconds(30));
-//            menuButton.click();
-//            TestUtils.sleepAndIgnoreException(5);
-//        } catch (WaitForConditionTimeoutException e) {
-//            System.err.println("ERROR: Main menu button not found within the given timeout.");
-//
-//        }
-//    }
-//    /**
-//     *
-//     * Clicks on the "Main Menu" and performs two actions in the subsequent menu popups.
-//     * The method first clicks the main menu, then locates and interacts with two successive menu items.
-//     * If any menu or action cannot be found within the timeout period, an error message is logged.
-//     *
-//     * @param remoteRobot the instance used to interact with the UI.
-//     * @param firstAction the text of the first action to be selected in the first menu.
-//     * @param secondAction the text of the second action to be selected in the second menu.
-//     *
-//     */
-//    public static void clickOnMainMenuList(RemoteRobot remoteRobot, String firstAction , String secondAction) {
-//        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-//        try {
-//            clickOnMainMenu(remoteRobot);
-//            ContainerFixture firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']") , Duration.ofSeconds(30));
-//            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-//                    Duration.ofSeconds(1),
-//                    "Waiting for first menu to get displayed",
-//                    "Timeout while trying to find or interact with menu first window items.",
-//                    firstMenuPopup::isShowing);
-//            // Now that the element is available, move the mouse
-//            firstMenuPopup.findText(firstAction).moveMouse();
-//
-//            ComponentFixture secondMenuPopup = firstMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
-//            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-//                    Duration.ofSeconds(1),
-//                    "Waiting for second menu to get displayed",
-//                    "Timeout while trying to find or interact with menu second window items.",
-//                    secondMenuPopup::isShowing);
-//            secondMenuPopup.findText(secondAction).click();
-//
-//        } catch (WaitForConditionTimeoutException e) {
-//            System.err.println("ERROR: Timeout while trying to find or interact with menu items.");
-//        }
-//    }
-//
-//    /**
-//     * Clicks on the "Main Menu" and performs three actions in the subsequent menu popups.
-//     * The method first clicks the main menu, then locates and interacts with three successive menu items.
-//     * If any menu or action cannot be found within the timeout period, an error message is logged.
-//     *
-//     * @param remoteRobot the instance used to interact with the UI.
-//     * @param firstAction the text of the first action to be selected in the first menu.
-//     * @param secondAction the text of the second action to be selected in the second menu.
-//     * @param thirdAction the text of the third action to be selected in the third menu.
-//     *
-//     */
-//    public static void clickOnMainMenuSubList(RemoteRobot remoteRobot, String firstAction, String secondAction, String thirdAction) {
-//        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-//        try {
-//            clickOnMainMenu(remoteRobot);
-//            ContainerFixture firstMenuPopup = projectFrame.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
-//            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-//                    Duration.ofSeconds(1),
-//                    "Waiting for first menu to get displayed",
-//                    "Timeout while trying to find or interact with menu first window items.",
-//                    () -> !findAll(ComponentFixture.class,
-//                            byXpath("//div[@class='HeavyWeightWindow']")).isEmpty());
-//            List<ComponentFixture> list = findAll(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
-//            return list.get(0);
-//            firstMenuPopup.findText(firstAction).moveMouse();
-//            ContainerFixture secondMenuPopup = firstMenuPopup.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
-//            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-//                    Duration.ofSeconds(1),
-//                    "Waiting for second menu to get displayed",
-//                    "Timeout while trying to find or interact with menu second window items.",
-//                    secondMenuPopup::isShowing);
-//            secondMenuPopup.findText(secondAction).moveMouse();
-//            ComponentFixture thirdMenuPopup = secondMenuPopup.find(ComponentFixture.class, byXpath("//div[@class='HeavyWeightWindow']"), Duration.ofSeconds(30));
-//            RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-//                    Duration.ofSeconds(1),
-//                    "Waiting for third menu to get displayed",
-//                    "Timeout while trying to find or interact with menu third window items.",
-//                    thirdMenuPopup::isShowing);
-//            thirdMenuPopup.findText(thirdAction).click();
-//        } catch (WaitForConditionTimeoutException e) {
-//            System.err.println("ERROR: Timeout while trying to find or interact with menu items.");
-//        }
-//    }
+    public static void clickSearchEverywhereAction(RemoteRobot remoteRobot) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+        try {
+            String xPath = "//div[@myicon='search.svg']";
+            ComponentFixture actionButton = projectFrame.getActionButton(xPath, "10");
+            actionButton.click();
+            TestUtils.sleepAndIgnoreException(5);
+        } catch (WaitForConditionTimeoutException e) {
+            System.err.println("ERROR: Timeout while trying to find or click the SquareStripeButton for SearchEverywhere button");
+        }
+    }
+    public static void runSearchEverywherePanel(RemoteRobot remoteRobot, String action, int maxRetries) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+        // Search everywhere UI actions may fail due to UI flickering/indexing on Windows. Retry in case of a failure.
+        clickSearchEverywhereAction(remoteRobot);
+        Exception error = null;
+        for (int i = 0; i < maxRetries; i++) {
+            try {
+                error = null;
+                // Click on the Actions tab
+                clickOnActionButton(projectFrame, action);
+                break;
+            } catch (Exception e) {
+                error = e;
+                TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
+                        "Failed to run the " + action + " action using the search everywhere option (" + e.getMessage() + "). Retrying...");
+                TestUtils.sleepAndIgnoreException(5);
+            }
+        }
+
+        // Report the last error if there is one.
+        if (error != null) {
+            throw new RuntimeException("Failed to run the " + action + " action using the search everywhere option", error);
+        }
+    }
+
+    public static void clickOnActionButton(ProjectFrameFixture projectFrame, String action) {
+        ComponentFixture actionsTabFixture = projectFrame.getSETabLabel("Actions");
+        actionsTabFixture.click();
+
+        // Type the search string in the search dialog box.
+        JTextFieldFixture searchField = projectFrame.textField(JTextFieldFixture.Companion.byType(), Duration.ofSeconds(10));
+        searchField.click();
+        searchField.setText(action);
+        TestUtils.sleepAndIgnoreException(1); // allow search time to resolve
+
+        // Wait for the desired action to show in the search output frame and click on it.
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(20),
+                Duration.ofSeconds(1),
+                "Waiting for the search to filter and show " + action + " in search output",
+                "The search did not filter or show " + action + " in the search output",
+                () -> findTextInListOutputPanel(projectFrame, action) != null);
+
+        RemoteText foundAction = findTextInListOutputPanel(projectFrame, action);
+        if (foundAction != null) {
+            foundAction.click();
+        } else {
+            throw new RuntimeException("Search everywhere found " + action + ", but it can no longer be found after a subsequent attempt to find it.");
+        }
+    }
 
 }
