@@ -43,23 +43,34 @@ on:
     branches: '**'
   pull_request:
     branches: [ main, intellij-2024.2-support ]
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        runtime: [ linux, mac, windows ]
+        os: [ macOS-latest ]
+        iteration: [ 1, 2, 3, 4, 5, 6]
         include:
-          - runtime: linux
-            os: ubuntu-latest
-            reportName: linux-test-report
-          - runtime: mac
-            os: macOS-latest
-            reportName: mac-test-report
-          - runtime: windows
-            os: windows-latest
-            reportName: windows-test-report
+          - os: macOS-latest
+            iteration: 1
+            reportName: mac-test-report-1
+          - os: macOS-latest
+            iteration: 2
+            reportName: mac-test-report-2
+          - os: macOS-latest
+            iteration: 3
+            reportName: mac-test-report-3
+          - os: macOS-latest
+            iteration: 4
+            reportName: mac-test-report-4
+          - os: macOS-latest
+            iteration: 5
+            reportName: mac-test-report-5
+          - os: macOS-latest
+            iteration: 6
+            reportName: mac-test-report-6
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
