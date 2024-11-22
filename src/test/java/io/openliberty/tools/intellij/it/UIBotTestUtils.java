@@ -2176,6 +2176,7 @@ public class UIBotTestUtils {
                                     "Waiting for the remove config button on the run/debug configurations dialog to be enabled",
                                     "The remove config button on the config run/debug configurations was not enabled",
                                     removeCfgButton::isEnabled);
+                            TestUtils.sleepAndIgnoreException(30);
                             removeCfgButton.click();
                         } catch (WaitForConditionTimeoutException wfcte) {
                             // We have reached the end of the Liberty entries.
