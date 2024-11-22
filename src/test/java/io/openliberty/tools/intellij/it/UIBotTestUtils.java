@@ -2466,11 +2466,11 @@ public class UIBotTestUtils {
     public static void runSearchEverywherePanel(RemoteRobot remoteRobot, String action, int maxRetries) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         // Search everywhere UI actions may fail due to UI flickering/indexing on Windows. Retry in case of a failure.
-        clickSearchEverywhereAction(remoteRobot);
         Exception error = null;
         for (int i = 0; i < maxRetries; i++) {
             try {
                 error = null;
+                clickSearchEverywhereAction(remoteRobot);
                 // Click on the Actions tab
                 clickOnActionButton(projectFrame, action);
                 break;

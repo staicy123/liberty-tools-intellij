@@ -351,7 +351,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
         try {
             var menuButton = projectFrame.find(ComponentFixture.class, byXpath("//div[@tooltiptext='Main Menu']"), Duration.ofSeconds(30));
             menuButton.click();
-           TestUtils.sleepAndIgnoreException(30);
+          // TestUtils.sleepAndIgnoreException(30);
         } catch (WaitForConditionTimeoutException e) {
             System.err.println("ERROR: Main menu button not found within the given timeout.");
 
