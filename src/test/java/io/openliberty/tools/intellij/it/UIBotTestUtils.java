@@ -2489,8 +2489,9 @@ public class UIBotTestUtils {
     }
 
     public static void clickOnActionButton(ProjectFrameFixture projectFrame, String action) {
-        ComponentFixture actionsTabFixture = projectFrame.getSETabLabel("Actions");
-        actionsTabFixture.click();
+//        ComponentFixture actionsTabFixture = projectFrame.getSETabLabel("Actions");
+//        //div[@class='SearchEverywhereUI']
+//        actionsTabFixture.click();
 
         // Type the search string in the search dialog box.
         JTextFieldFixture searchField = projectFrame.textField(JTextFieldFixture.Companion.byType(), Duration.ofSeconds(10));
