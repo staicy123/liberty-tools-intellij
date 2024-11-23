@@ -379,7 +379,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
                     () -> !(projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"))).isEmpty());
             List<ContainerFixture> firstMenuPopup = findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
             firstMenuPopup.get(0).findText(firstAction).moveMouse();
-           TestUtils.sleepAndIgnoreException(30);
+           TestUtils.sleepAndIgnoreException(8);
             RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
                     Duration.ofSeconds(1),
                     "Waiting for second menu to get displayed",
@@ -416,7 +416,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
                     () -> !(projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"))).isEmpty());
             List<ContainerFixture> firstMenuPopup = findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
            firstMenuPopup.get(0).findText(firstAction).moveMouse();
-          TestUtils.sleepAndIgnoreException(30);
+          TestUtils.sleepAndIgnoreException(8);
           RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
                     Duration.ofSeconds(1),
                     "Waiting for second menu to get displayed",
@@ -425,7 +425,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
                             byXpath("//div[@class='HeavyWeightWindow']")).isEmpty());
             List<ContainerFixture> secondMenuPopup =firstMenuPopup.get(0).findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
             secondMenuPopup.get(0).findText(secondAction).moveMouse();
-          TestUtils.sleepAndIgnoreException(30);
+          TestUtils.sleepAndIgnoreException(8);
           RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
                     Duration.ofSeconds(1),
                     "Waiting for third menu to get displayed",
