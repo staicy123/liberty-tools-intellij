@@ -1810,7 +1810,8 @@ public class UIBotTestUtils {
     public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
      //   projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
-        runSearchEverywherePanel(remoteRobot, "Edit Configurations...", 4);
+        runSearchEverywherePanel(remoteRobot, "Edit Configurations", 4);
+      // UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, "Edit Configurations");
 
         // Find the Run/Debug Configurations dialog.
         DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
@@ -2123,7 +2124,8 @@ public class UIBotTestUtils {
     public static void deleteLibertyRunConfigurations(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
        // projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
-        runSearchEverywherePanel(remoteRobot, "Edit Configurations...", 4);
+       runSearchEverywherePanel(remoteRobot, "Edit Configurations", 4);
+      // UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, "Edit Configurations...");
 
         // The Run/Debug configurations dialog could resize and reposition icons. Retry in case of a failure.
         int maxRetries = 3;
@@ -2251,7 +2253,7 @@ public class UIBotTestUtils {
             try {
                 List<RemoteText> entries = searchList.findAllText();
                 for (RemoteText entry : entries) {
-                    if (entry.getText().equals(text)) {
+                    if (entry.getText().contains(text)) {
                         foundText = entry;
                     }
                 }
