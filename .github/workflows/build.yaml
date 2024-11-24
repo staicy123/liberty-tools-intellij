@@ -51,26 +51,38 @@ jobs:
       fail-fast: false
       matrix:
         os: [ macOS-latest ]
-        iteration: [ 1 , 2, 3, 4, 5, 6]
+        iteration: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
         include:
           - os: macOS-latest
             iteration: 1
             reportName: mac-test-report-1
-                          - os: macOS-latest
-                          iteration: 2
-                          reportName: mac-test-report-2
-                            - os: macOS-latest
-                              iteration: 3
-                              reportName: mac-test-report-3
-                            - os: macOS-latest
-                              iteration: 4
-                              reportName: mac-test-report-4
-                            - os: macOS-latest
-                              iteration: 5
-                              reportName: mac-test-report-5
-                            - os: macOS-latest
-                              iteration: 6
-                              reportName: mac-test-report-6
+          - os: macOS-latest
+            iteration: 2
+            reportName: mac-test-report-2
+          - os: macOS-latest
+            iteration: 3
+            reportName: mac-test-report-3
+          - os: macOS-latest
+            iteration: 4
+            reportName: mac-test-report-4
+          - os: macOS-latest
+            iteration: 5
+            reportName: mac-test-report-5
+          - os: macOS-latest
+            iteration: 6
+            reportName: mac-test-report-6
+          - os: macOS-latest
+            iteration: 7
+            reportName: mac-test-report-7
+          - os: macOS-latest
+            iteration: 8
+            reportName: mac-test-report-8
+          - os: macOS-latest
+            iteration: 9
+            reportName: mac-test-report-9
+          - os: macOS-latest
+            iteration: 10
+            reportName: mac-test-report-10
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
