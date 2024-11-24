@@ -122,8 +122,8 @@ public class UIBotTestUtils {
             // From the project frame.
             ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
             commonFixture = projectFrame;
-           // projectFrame.clickOnMainMenuList(remoteRobot, "File", "Open...");
-            runSearchEverywherePanel(remoteRobot, "Open...", 4);
+          // projectFrame.clickOnMainMenuList(remoteRobot, "File", "Open...");
+           runSearchEverywherePanel(remoteRobot, "Open...", 4);
         }
 
         // Specify the project's path. The text field is pre-populated by default.
