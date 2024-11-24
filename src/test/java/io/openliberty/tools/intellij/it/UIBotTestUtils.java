@@ -2062,22 +2062,23 @@ public class UIBotTestUtils {
      */
     public static void selectConfigUsingMenu(RemoteRobot remoteRobot, String cfgName, ExecMode execMode) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        projectFrame.clickOnMainMenu(remoteRobot);
-        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-                Duration.ofSeconds(1),
-                "Waiting for first menu to get displayed",
-                "Timeout while trying to find or interact with menu first window items.",
-                () -> !(projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"))).isEmpty());
-        List<ContainerFixture> firstMenuPopup = projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
-        firstMenuPopup.get(0).findText("Run").moveMouse();
-        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-                Duration.ofSeconds(1),
-                "Waiting for second menu to get displayed",
-                "Timeout while trying to find or interact with menu second window items.",
-                () -> !firstMenuPopup.get(0).findAll(ContainerFixture.class,
-                        byXpath("//div[@class='HeavyWeightWindow']")).isEmpty());
-        List<ContainerFixture> secondMenuPopup =firstMenuPopup.get(0).findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
-        secondMenuPopup.get(0).findText(execMode == ExecMode.DEBUG ? "Debug…" : "Run…").click();
+//        projectFrame.clickOnMainMenu(remoteRobot);
+//        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+//                Duration.ofSeconds(1),
+//                "Waiting for first menu to get displayed",
+//                "Timeout while trying to find or interact with menu first window items.",
+//                () -> !(projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"))).isEmpty());
+//        List<ContainerFixture> firstMenuPopup = projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
+//        firstMenuPopup.get(0).findText("Run").moveMouse();
+//        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+//                Duration.ofSeconds(1),
+//                "Waiting for second menu to get displayed",
+//                "Timeout while trying to find or interact with menu second window items.",
+//                () -> !firstMenuPopup.get(0).findAll(ContainerFixture.class,
+//                        byXpath("//div[@class='HeavyWeightWindow']")).isEmpty());
+//        List<ContainerFixture> secondMenuPopup =firstMenuPopup.get(0).findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
+//        secondMenuPopup.get(0).findText(execMode == ExecMode.DEBUG ? "Debug…" : "Run…").click();
+        runSearchEverywherePanel(remoteRobot, execMode == ExecMode.DEBUG ? "Debug…" : "Run…", 4);
 
         // Retrieve the list of configs from the config list window.
         ComponentFixture cfgSelectWindow = projectFrame.getMyList();
