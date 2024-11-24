@@ -1810,7 +1810,7 @@ public class UIBotTestUtils {
     public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
       // projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations…");
-        runSearchEverywherePanel(remoteRobot, "Edit Configurations...", 4);
+        runSearchEverywherePanel(remoteRobot, "Edit Configurations…", 4);
       // UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, "Edit Configurations");
 
         // Find the Run/Debug Configurations dialog.
@@ -2124,7 +2124,7 @@ public class UIBotTestUtils {
     public static void deleteLibertyRunConfigurations(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
       // projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations…");
-      runSearchEverywherePanel(remoteRobot, "Edit Configurations", 4);
+      runSearchEverywherePanel(remoteRobot, "Edit Configurations…", 4);
       // UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, "Edit Configurations...");
 
         // The Run/Debug configurations dialog could resize and reposition icons. Retry in case of a failure.
@@ -2171,7 +2171,7 @@ public class UIBotTestUtils {
                                     "Waiting for the remove config button on the run/debug configurations dialog to be enabled",
                                     "The remove config button on the config run/debug configurations was not enabled",
                                     removeCfgButton::isEnabled);
-                            TestUtils.sleepAndIgnoreException(30);
+                            TestUtils.sleepAndIgnoreException(15);
                             removeCfgButton.click();
                         } catch (WaitForConditionTimeoutException wfcte) {
                             // We have reached the end of the Liberty entries.
