@@ -1402,12 +1402,12 @@ public class UIBotTestUtils {
     public static void copyWindowContent(RemoteRobot remoteRobot) {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-    projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
-      // runSearchEverywherePanel(remoteRobot, "Select All", 4);
+   // projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+       runSearchEverywherePanel(remoteRobot, "Select All", 4);
         TestUtils.sleepAndIgnoreException(5);
         // Copy the content.
-      projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Copy");
-      //runSearchEverywherePanel(remoteRobot, "Copy", 4);
+     // projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Copy");
+      runSearchEverywherePanel(remoteRobot, "Copy", 4);
     }
 
     /**
