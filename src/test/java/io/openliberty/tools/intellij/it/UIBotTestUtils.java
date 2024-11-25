@@ -1566,7 +1566,7 @@ public class UIBotTestUtils {
 
                 // Click on Navigate on the Menu bar.
                 ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
-               projectFrame.clickOnMainMenuList(remoteRobot, "Navigate", "Search Everywhere");
+           //    projectFrame.clickOnMainMenuList(remoteRobot, "Navigate", "Search Everywhere");
                 clickSearchEverywhereAction(remoteRobot);
                 // Click on the Actions tab
                 clickOnActionButton(projectFrame, action);
@@ -2124,8 +2124,8 @@ public class UIBotTestUtils {
      */
     public static void deleteLibertyRunConfigurations(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-      projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations…");
-      //runSearchEverywherePanel(remoteRobot, "Edit Configurations…", 4);
+     // projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations…");
+      runSearchEverywherePanel(remoteRobot, "Edit Configurations…", 4);
       // UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, "Edit Configurations...");
 
         // The Run/Debug configurations dialog could resize and reposition icons. Retry in case of a failure.
