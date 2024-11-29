@@ -19,6 +19,7 @@ import com.intellij.remoterobot.utils.WaitForConditionTimeoutException;
 import io.openliberty.tools.intellij.it.fixtures.DialogFixture;
 import io.openliberty.tools.intellij.it.fixtures.ProjectFrameFixture;
 import io.openliberty.tools.intellij.it.fixtures.WelcomeFrameFixture;
+import kotlinx.html.P;
 import org.assertj.swing.core.MouseButton;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -122,8 +123,15 @@ public class UIBotTestUtils {
             // From the project frame.
             ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
             commonFixture = projectFrame;
-      //  projectFrame.clickOnMainMenuList(remoteRobot, "File", "Open...");
-        runSearchEverywherePanel(remoteRobot, "Open...", 4);
+            String version = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
+            if (version.startsWith("2024.2")) {
+                projectFrame.clickOnMainMenuList(remoteRobot, "File", "Open...");
+            }
+            else {
+                projectFrame.clickOnMainMenuList(remoteRobot, "File", "Open…");
+            }
+
+        //runSearchEverywherePanel(remoteRobot, "Open...", 4);
         }
 
         // Specify the project's path. The text field is pre-populated by default.
@@ -200,8 +208,8 @@ public class UIBotTestUtils {
     public static void closeProjectFrame(RemoteRobot remoteRobot) {
         // Click on File on the Menu bar.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-     // projectFrame.clickOnMainMenuList(remoteRobot, "File", "Close Project");
-       runSearchEverywherePanel(remoteRobot, "Close Project", 4);
+      projectFrame.clickOnMainMenuList(remoteRobot, "File", "Close Project");
+      // runSearchEverywherePanel(remoteRobot, "Close Project", 4);
     }
 
     /**
@@ -716,8 +724,8 @@ public class UIBotTestUtils {
      */
     public static void closeAllEditorTabs(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-     // projectFrame.clickOnMainMenuSubList(remoteRobot, "Window", "Editor Tabs", "Close All Tabs");
-       runSearchEverywherePanel(remoteRobot, "Close All Tabs", 4);
+     projectFrame.clickOnMainMenuSubList(remoteRobot, "Window", "Editor Tabs", "Close All Tabs");
+       //runSearchEverywherePanel(remoteRobot, "Close All Tabs", 4);
     }
 
     /**
@@ -1402,12 +1410,12 @@ public class UIBotTestUtils {
     public static void copyWindowContent(RemoteRobot remoteRobot) {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-   // projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
-       runSearchEverywherePanel(remoteRobot, "Select All", 4);
+   projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+       //runSearchEverywherePanel(remoteRobot, "Select All", 4);
         TestUtils.sleepAndIgnoreException(5);
         // Copy the content.
-     // projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Copy");
-      runSearchEverywherePanel(remoteRobot, "Copy", 4);
+      projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Copy");
+      //runSearchEverywherePanel(remoteRobot, "Copy", 4);
     }
 
     /**
@@ -1418,11 +1426,11 @@ public class UIBotTestUtils {
     public static void clearWindowContent(RemoteRobot remoteRobot) {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-     // projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
-       runSearchEverywherePanel(remoteRobot, "Select All", 4);
+     projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+       //runSearchEverywherePanel(remoteRobot, "Select All", 4);
         // Delete/Clear the content.
-     // projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Delete");
-       runSearchEverywherePanel(remoteRobot, "Delete", 4);
+      projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Delete");
+      // runSearchEverywherePanel(remoteRobot, "Delete", 4);
     }
 
     public static void pasteOnActiveWindow(RemoteRobot remoteRobot) {
@@ -1444,16 +1452,16 @@ public class UIBotTestUtils {
         }
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-       // projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
-      runSearchEverywherePanel(remoteRobot, "Select All", 4);
+       projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+      //runSearchEverywherePanel(remoteRobot, "Select All", 4);
 
         // Paste the content.
-      //projectFrame.clickOnMainMenuSubList(remoteRobot, "Edit", "Paste", "Paste");
-      runSearchEverywherePanel(remoteRobot, "Paste", 4);
+      projectFrame.clickOnMainMenuSubList(remoteRobot, "Edit", "Paste", "Paste");
+      //runSearchEverywherePanel(remoteRobot, "Paste", 4);
 
         // Save.
-    // projectFrame.clickOnMainMenuList(remoteRobot, "File", "Save All");
-      runSearchEverywherePanel(remoteRobot, "Save All", 4);
+     projectFrame.clickOnMainMenuList(remoteRobot, "File", "Save All");
+      //runSearchEverywherePanel(remoteRobot, "Save All", 4);
     }
 
     /**
@@ -1566,8 +1574,8 @@ public class UIBotTestUtils {
 
                 // Click on Navigate on the Menu bar.
                 ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
-              // projectFrame.clickOnMainMenuList(remoteRobot, "Navigate", "Search Everywhere");
-                clickSearchEverywhereAction(remoteRobot);
+              projectFrame.clickOnMainMenuList(remoteRobot, "Navigate", "Search Everywhere");
+                //clickSearchEverywhereAction(remoteRobot);
                 // Click on the Actions tab
                 clickOnActionButton(projectFrame, action);
                 // If the Liberty: Start... action was selected, make sure the Edit Configuration dialog is displayed.
@@ -1809,8 +1817,17 @@ public class UIBotTestUtils {
      */
     public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-      // projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations…");
-        runSearchEverywherePanel(remoteRobot, "Edit Configurations…", 4);
+        String version = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
+        if (version.startsWith("2024.2")) {
+            // Use the version-specific menu text for 2024.2
+            projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
+        } else if (version.startsWith("2024.3")) {
+            // Use the version-specific menu text for 2024.3
+            projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations…");
+        } else {
+            throw new UnsupportedOperationException("Unsupported IntelliJ version: " + version);
+        }
+        //runSearchEverywherePanel(remoteRobot, "Edit Configurations…", 4);
       // UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, "Edit Configurations");
 
         // Find the Run/Debug Configurations dialog.
@@ -2062,23 +2079,30 @@ public class UIBotTestUtils {
      */
     public static void selectConfigUsingMenu(RemoteRobot remoteRobot, String cfgName, ExecMode execMode) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-//        projectFrame.clickOnMainMenu(remoteRobot);
-//        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-//                Duration.ofSeconds(1),
-//                "Waiting for first menu to get displayed",
-//                "Timeout while trying to find or interact with menu first window items.",
-//                () -> !(projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"))).isEmpty());
-//        List<ContainerFixture> firstMenuPopup = projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
-//        firstMenuPopup.get(0).findText("Run").moveMouse();
-//        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-//                Duration.ofSeconds(1),
-//                "Waiting for second menu to get displayed",
-//                "Timeout while trying to find or interact with menu second window items.",
-//                () -> !firstMenuPopup.get(0).findAll(ContainerFixture.class,
-//                        byXpath("//div[@class='HeavyWeightWindow']")).isEmpty());
-//        List<ContainerFixture> secondMenuPopup =firstMenuPopup.get(0).findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
-//        secondMenuPopup.get(0).findText(execMode == ExecMode.DEBUG ? "Debug…" : "Run…").click();
-       runSearchEverywherePanel(remoteRobot, execMode == ExecMode.DEBUG ? "Debug…" : "Run…", 4);
+        projectFrame.clickOnMainMenu(remoteRobot);
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+                Duration.ofSeconds(1),
+                "Waiting for first menu to get displayed",
+                "Timeout while trying to find or interact with menu first window items.",
+                () -> !(projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"))).isEmpty());
+        List<ContainerFixture> firstMenuPopup = projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
+        firstMenuPopup.get(0).findText("Run").moveMouse();
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+                Duration.ofSeconds(1),
+                "Waiting for second menu to get displayed",
+                "Timeout while trying to find or interact with menu second window items.",
+                () -> !firstMenuPopup.get(0).findAll(ContainerFixture.class,
+                        byXpath("//div[@class='HeavyWeightWindow']")).isEmpty());
+        List<ContainerFixture> secondMenuPopup =firstMenuPopup.get(0).findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
+        String version = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
+        if (version.startsWith("2024.2")) {
+            secondMenuPopup.get(0).findText(execMode == ExecMode.DEBUG ? "Debug..." : "Run...").click();
+        }
+        else {
+            secondMenuPopup.get(0).findText(execMode == ExecMode.DEBUG ? "Debug…" : "Run…").click();
+        }
+
+       //runSearchEverywherePanel(remoteRobot, execMode == ExecMode.DEBUG ? "Debug…" : "Run…", 4);
 
         // Retrieve the list of configs from the config list window.
         ComponentFixture cfgSelectWindow = projectFrame.getMyList();
@@ -2124,8 +2148,17 @@ public class UIBotTestUtils {
      */
     public static void deleteLibertyRunConfigurations(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-     // projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations…");
-      runSearchEverywherePanel(remoteRobot, "Edit Configurations…", 4);
+        String version = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
+        if (version.startsWith("2024.2")) {
+            // Use the version-specific menu text for 2024.2
+            projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
+        } else if (version.startsWith("2024.3")) {
+            // Use the version-specific menu text for 2024.3
+            projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations…");
+        } else {
+            throw new UnsupportedOperationException("Unsupported IntelliJ version: " + version);
+        }
+      //runSearchEverywherePanel(remoteRobot, "Edit Configurations…", 4);
       // UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, "Edit Configurations...");
 
         // The Run/Debug configurations dialog could resize and reposition icons. Retry in case of a failure.
