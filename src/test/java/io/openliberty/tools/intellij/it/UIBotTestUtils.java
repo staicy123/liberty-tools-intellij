@@ -120,10 +120,14 @@ public class UIBotTestUtils {
             // From the project frame.
             ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
             commonFixture = projectFrame;
-            ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "10");
-            fileMenuEntry.click();
-            ComponentFixture openFixture = projectFrame.getActionMenuItem("Open...");
-            openFixture.click(new Point());
+
+            String version = projectFrame.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
+            if (version.startsWith("2024.2")) {
+                projectFrame.clickOnMainMenuList(remoteRobot, "File", "Open...");
+            }
+            else {
+                projectFrame.clickOnMainMenuList(remoteRobot, "File", "Open…");
+            }
         }
 
         // Specify the project's path. The text field is pre-populated by default.
@@ -174,20 +178,10 @@ public class UIBotTestUtils {
         // Wait for the project frame to open, and make sure a few basic UI items are showing.
         // Note that at specific points in time, the window pane items will re-arrange themselves
         // as content is displayed. This, has an effect on the location of the items on the frame.
-        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
-        ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "60");
-        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-                Duration.ofSeconds(1),
-                "Waiting for the File action menu on the main window pane to be enabled",
-                "The file action menu on then main window pane is not enabled",
-                () -> projectFrame.isComponentEnabled(fileMenuEntry));
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
+        projectFrame.clickOnMainMenu(remoteRobot);
 
-        ComponentFixture wpStripeButton = projectFrame.getStripeButton("Liberty", "60");
-        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-                Duration.ofSeconds(1),
-                "Waiting for the Liberty button on the main window pane stripe to be enabled",
-                "The Liberty button on then main window pane stripe is not enabled",
-                () -> projectFrame.isComponentEnabled(wpStripeButton));
+        clickOnSquareStripeButton(remoteRobot, "Liberty");
     }
 
     /**
@@ -214,12 +208,7 @@ public class UIBotTestUtils {
     public static void closeProjectFrame(RemoteRobot remoteRobot) {
         // Click on File on the Menu bar.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "10");
-        fileMenuEntry.click();
-
-        // Click on Close Project in the menu.
-        ComponentFixture closeFixture = projectFrame.getActionMenuItem("Close Project");
-        closeFixture.click();
+        projectFrame.clickOnMainMenuList(remoteRobot, "File", "Close Project");
     }
 
     /**
@@ -742,18 +731,7 @@ public class UIBotTestUtils {
      */
     public static void closeAllEditorTabs(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        ComponentFixture windowMenuEntry = projectFrame.getActionMenu("Window", "10");
-        windowMenuEntry.click();
-
-        // Click on Editor Tabs in the menu.
-        ComponentFixture editorTabsFixture = projectFrame.getChildActionMenu("Window", "Editor Tabs");
-        editorTabsFixture.click();
-
-        // Click on Close Project in the menu.
-        ComponentFixture closeAllTabsFixture = projectFrame.getChildActionMenuItem("Window", "Close All Tabs");
-        if (closeAllTabsFixture.callJs("component.isEnabled();", false)) {
-            closeAllTabsFixture.click();
-        }
+        projectFrame.clickOnMainMenuSubList(remoteRobot, "Window", "Editor Tabs", "Close All Tabs");
     }
 
     /**
@@ -785,7 +763,7 @@ public class UIBotTestUtils {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
 
         try {
-            String xPath = "//div[@accessiblename='" + fileName + "' and @class='SimpleColoredComponent']";
+            String xPath = "//div[@accessiblename='" + fileName + "' and @class='EditorTabLabel']";
             ComponentFixture actionButton = projectFrame.getActionButton(xPath, "10");
             actionButton.click();
 
@@ -807,7 +785,7 @@ public class UIBotTestUtils {
 
         Keyboard keyboard = new Keyboard(remoteRobot);
 
-        Locator locator = byXpath("//div[@class='EditorWindowTopComponent']//div[@class='EditorComponentImpl']");
+        Locator locator = byXpath("//div[@class='EditorCompositePanel']//div[@class='EditorComponentImpl']");
         clickOnFileTab(remoteRobot, hoverFile);
         EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
 
@@ -872,7 +850,7 @@ public class UIBotTestUtils {
 
         Keyboard keyboard = new Keyboard(remoteRobot);
 
-        Locator locator = byXpath("//div[@class='EditorWindowTopComponent']//div[@class='EditorComponentImpl']");
+        Locator locator = byXpath("//div[@class='EditorCompositePanel']//div[@class='EditorComponentImpl']");
         clickOnFileTab(remoteRobot, hoverFile);
         EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
         Point originPt = new Point(1, 1);
@@ -1187,7 +1165,7 @@ public class UIBotTestUtils {
 
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
         clickOnFileTab(remoteRobot, "server.xml");
-        Locator locator = byXpath("//div[@class='EditorWindowTopComponent']//div[@class='EditorComponentImpl']");
+        Locator locator = byXpath("//div[@class='EditorCompositePanel']//div[@class='EditorComponentImpl']");
         EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
         editorNew.click();
 
@@ -1282,7 +1260,7 @@ public class UIBotTestUtils {
     public static void selectAndDeleteTextInJavaPart(RemoteRobot remoteRobot, String fileName, String textToDelete) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
         clickOnFileTab(remoteRobot, fileName);
-        Locator locator = byXpath("//div[@class='EditorWindowTopComponent']//div[@class='EditorComponentImpl']");
+        Locator locator = byXpath("//div[@class='EditorCompositePanel']//div[@class='EditorComponentImpl']");
         EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
         editorNew.click();
 
@@ -1318,7 +1296,7 @@ public class UIBotTestUtils {
      */
     public static void selectAndModifyTextInJavaPart(RemoteRobot remoteRobot, String fileName, String textToModify, String modificationText){
         clickOnFileTab(remoteRobot, fileName);
-        Locator locator = byXpath("//div[@class='EditorWindowTopComponent']//div[@class='EditorComponentImpl']");
+        Locator locator = byXpath("//div[@class='EditorCompositePanel']//div[@class='EditorComponentImpl']");
         EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
         editorNew.click();
 
@@ -1442,16 +1420,11 @@ public class UIBotTestUtils {
     public static void copyWindowContent(RemoteRobot remoteRobot) {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-        ComponentFixture editMenuEntry = projectFrame.getActionMenu("Edit", "10");
-        editMenuEntry.click();
-        ComponentFixture slectAllEntry = projectFrame.getActionMenuItem("Select All");
-        slectAllEntry.click();
+        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
 
         // Copy the content.
-        editMenuEntry.click();
-        ComponentFixture copyEntry = projectFrame.getActionMenuItem("Copy");
-        copyEntry.click();
-        projectFrame.click();
+        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Copy");
+
     }
 
     /**
@@ -1462,15 +1435,10 @@ public class UIBotTestUtils {
     public static void clearWindowContent(RemoteRobot remoteRobot) {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-        ComponentFixture editMenuEntry = projectFrame.getActionMenu("Edit", "10");
-        editMenuEntry.click();
-        ComponentFixture selectAllEntry = projectFrame.getActionMenuItem("Select All");
-        selectAllEntry.click();
+        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
 
         // Delete/Clear the content.
-        editMenuEntry.click();
-        ComponentFixture deleteEntry = projectFrame.getActionMenuItem("Delete");
-        deleteEntry.click();
+        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Delete");
     }
 
     public static void pasteOnActiveWindow(RemoteRobot remoteRobot) {
@@ -1492,24 +1460,11 @@ public class UIBotTestUtils {
         }
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-        ComponentFixture editMenuEntry = projectFrame.getActionMenu("Edit", "10");
-        editMenuEntry.click();
-        ComponentFixture selectAllEntry = projectFrame.getActionMenuItem("Select All");
-        selectAllEntry.click();
-
+        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
         // Paste the content.
-        editMenuEntry = projectFrame.getActionMenu("Edit", "10");
-        editMenuEntry.click();
-        ComponentFixture pasteFixture = projectFrame.getChildActionMenu("Edit", "Paste");
-        pasteFixture.click();
-        ComponentFixture pasteChildEntry = projectFrame.getChildActionMenuItem("Edit", "Paste");
-        pasteChildEntry.click();
-
+        projectFrame.clickOnMainMenuSubList(remoteRobot, "Edit", "Paste", "Paste");
         // Save.
-        ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "10");
-        fileMenuEntry.click();
-        ComponentFixture saveAllEntry = projectFrame.getActionMenuItem("Save All");
-        saveAllEntry.click();
+        projectFrame.clickOnMainMenuList(remoteRobot, "File", "Save All");
     }
 
     /**
@@ -1622,12 +1577,7 @@ public class UIBotTestUtils {
 
                 // Click on Navigate on the Menu bar.
                 ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
-                ComponentFixture navigateMenuEntry = projectFrame.getActionMenu("Navigate", "20");
-                navigateMenuEntry.click();
-
-                // Click on Search Everywhere in the menu.
-                ComponentFixture searchFixture = projectFrame.getActionMenuItem("Search Everywhere");
-                searchFixture.click();
+                projectFrame.clickOnMainMenuList(remoteRobot, "Navigate", "Search Everywhere");
 
                 // Click on the Actions tab
                 ComponentFixture actionsTabFixture = projectFrame.getSETabLabel("Actions");
@@ -1892,10 +1842,16 @@ public class UIBotTestUtils {
      */
     public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
-        runMenu.click();
-        ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations...");
-        editCfgsMenuEntry.click();
+        String version = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
+        if (version.startsWith("2024.2")) {
+            // Use the version-specific menu text for 2024.2
+            projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
+        } else if (version.startsWith("2024.3")) {
+            // Use the version-specific menu text for 2024.3
+            projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations…");
+        } else {
+            throw new UnsupportedOperationException("Unsupported IntelliJ version: " + version);
+        }
 
         // Find the Run/Debug Configurations dialog.
         DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
@@ -2146,14 +2102,56 @@ public class UIBotTestUtils {
      */
     public static void selectConfigUsingMenu(RemoteRobot remoteRobot, String cfgName, ExecMode execMode) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        ComponentFixture menuOption = projectFrame.getActionMenu("Run", "10");
-        menuOption.click();
-        ComponentFixture menuCfgExecOption = projectFrame.getActionMenuItem("Run...");
-        if (execMode == ExecMode.DEBUG) {
-            menuCfgExecOption = projectFrame.getActionMenuItem("Debug...");
-        }
+        for (int attempt = 0; attempt < 5; attempt++) { // Retry up to 5 times
+            try {
+                // Click on the main menu
+                projectFrame.clickOnMainMenu(remoteRobot);
 
-        menuCfgExecOption.click();
+                // Wait for the first menu to be displayed
+                RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+                        Duration.ofSeconds(1),
+                        "Waiting for first menu to get displayed",
+                        "Timeout while trying to find or interact with menu first window items.",
+                        () -> !(projectFrame.findAll(ContainerFixture.class,
+                                byXpath("//div[@class='HeavyWeightWindow']"))).isEmpty());
+
+                // Locate and interact with the first menu
+                List<ContainerFixture> firstMenuPopup = projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
+                firstMenuPopup.get(0).findText("Run").moveMouse();
+
+                // Wait for the second menu to be displayed
+                RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+                        Duration.ofSeconds(1),
+                        "Waiting for second menu to get displayed",
+                        "Timeout while trying to find or interact with menu second window items.",
+                        () -> !firstMenuPopup.get(0).findAll(ContainerFixture.class,
+                                        byXpath("//div[@class='HeavyWeightWindow']"))
+                                .isEmpty());
+
+                // Locate and interact with the second menu
+                List<ContainerFixture> secondMenuPopup = firstMenuPopup.get(0).findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
+
+                // Get IntelliJ version and choose the correct action
+                String version = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
+                if (version.startsWith("2024.2")) {
+                    secondMenuPopup.get(0).findText(execMode == ExecMode.DEBUG ? "Debug..." : "Run...").click();
+                } else {
+                    secondMenuPopup.get(0).findText(execMode == ExecMode.DEBUG ? "Debug…" : "Run…").click();
+                }
+
+                // Exit loop if successful
+                break;
+
+            } catch (WaitForConditionTimeoutException e) {
+                System.err.println("Attempt " + (attempt + 1) + " failed: Timeout while trying to find or interact with menu items.");
+            } catch (Exception e) {
+                System.err.println("Attempt " + (attempt + 1) + " failed: " + e.getMessage());
+            }
+
+            if (attempt == 4) { // If the last attempt fails
+                throw new IllegalStateException("Failed to perform menu navigation after multiple attempts.");
+            }
+        }
 
         // Retrieve the list of configs from the config list window.
         ComponentFixture cfgSelectWindow = projectFrame.getMyList();
@@ -2177,9 +2175,9 @@ public class UIBotTestUtils {
     public static void runConfigUsingIconOnToolbar(RemoteRobot remoteRobot, ExecMode execMode) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
 
-        Locator locator = byXpath("//div[contains(@myaction.key, 'group.RunMenu.text')]");
+        Locator locator = byXpath("//div[@class='ActionButton' and @myaction='Run (Run selected configuration)']");
         if (execMode == ExecMode.DEBUG) {
-            locator = byXpath("//div[@myicon='startDebugger.svg']");
+            locator = byXpath("//div[@myicon='debug.svg']");
         }
 
         ActionButtonFixture iconButton = projectFrame.actionButton(locator, Duration.ofSeconds(10));
@@ -2199,10 +2197,16 @@ public class UIBotTestUtils {
      */
     public static void deleteLibertyRunConfigurations(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
-        runMenu.click();
-        ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations...");
-        editCfgsMenuEntry.click();
+        String version = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
+        if (version.startsWith("2024.2")) {
+            // Use the version-specific menu text for 2024.2
+            projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
+        } else if (version.startsWith("2024.3")) {
+            // Use the version-specific menu text for 2024.3
+            projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations…");
+        } else {
+            throw new UnsupportedOperationException("Unsupported IntelliJ version: " + version);
+        }
 
         // The Run/Debug configurations dialog could resize and reposition icons. Retry in case of a failure.
         int maxRetries = 3;
@@ -2302,10 +2306,10 @@ public class UIBotTestUtils {
         } catch (WaitForConditionTimeoutException wfcte) {
             // The debug tab is not opened for some reason. Open it.
             ComponentFixture debugStripe = projectFrame.getStripeButton("Debug", "10");
-            debugStripe.click();
+            debugStripe.doubleClick();
         }
 
-        Locator locator = byXpath("//div[contains(@myvisibleactions, 'Get')]//div[contains(@myaction.key, 'action.Stop.text')]");
+        Locator locator = byXpath("//div[contains(@myvisibleactions, 'Out')]//div[@myicon='stop.svg']");
         ActionButtonFixture stopButton = projectFrame.actionButton(locator, Duration.ofSeconds(60));
         stopButton.click();
     }
@@ -2545,6 +2549,25 @@ public class UIBotTestUtils {
             UIBotTestUtils.closeProjectFrame(remoteRobot);
             TestUtils.sleepAndIgnoreException(30); // takes about 15s to render the whole Welcome page including the Open button on Mac.
             UIBotTestUtils.validateProjectFrameClosed(remoteRobot);
+        }
+    }
+
+    /**
+     * Clicks on a "SquareStripeButton" for a given file name.
+     * The method finds the button based on the specified file name and XPath, then clicks it.
+     * If the button is not found within the timeout period, an error message is logged.
+     *
+     * @param remoteRobot the {@link RemoteRobot} instance used to interact with the UI.
+     * @param fileName the name of the file associated with the SquareStripeButton to click.
+     */
+    public static void clickOnSquareStripeButton(RemoteRobot remoteRobot, String fileName) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+        try {
+            String xPath = "//div[@accessiblename='" + fileName + "' and @class='SquareStripeButton']";
+            ComponentFixture actionButton = projectFrame.getActionButton(xPath, "10");
+            actionButton.click();
+        } catch (WaitForConditionTimeoutException e) {
+            System.err.println("ERROR: Timeout while trying to find or click the SquareStripeButton for file: " + fileName);
         }
     }
 }

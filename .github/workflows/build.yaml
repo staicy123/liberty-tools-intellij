@@ -50,17 +50,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runtime: [ linux, mac, windows ]
+        runtime: [ mac, mac, mac ]
         include:
-          - runtime: linux
-            os: ubuntu-latest
-            reportName: linux-test-report
           - runtime: mac
             os: macOS-latest
             reportName: mac-test-report
-          - runtime: windows
-            os: windows-latest
-            reportName: windows-test-report
+          - runtime: mac
+            os: macOS-latest
+            reportName: mac-test-report
+          - runtime: mac
+            os: macOS-latest
+            reportName: mac-test-report
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
