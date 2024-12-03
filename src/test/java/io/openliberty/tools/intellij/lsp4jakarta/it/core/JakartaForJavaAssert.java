@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
  * https://github.com/eclipse/lsp4mp/blob/bc926f75df2ca103d78c67b997c87adb7ab480b1/microprofile.jdt/org.eclipse.lsp4mp.jdt.test/src/main/java/org/eclipse/lsp4mp/jdt/core/MicroProfileForJavaAssert.java
  * With certain methods modified or deleted to fit the purposes of LSP4Jakarta
  */
+
 public class JakartaForJavaAssert {
 
     // ------------------- Assert for CodeAction

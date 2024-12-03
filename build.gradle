@@ -1,4 +1,5 @@
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 plugins {
     id 'java'
     id 'org.jetbrains.intellij.platform' version '2.1.0'
@@ -157,37 +158,52 @@ task copyDeps(type: Copy) {
     rename '^(.*)(-[0-9]+[.[0-9]+]+(-SNAPSHOT)?)(.*)$', '$1$4'
 }
 
-runIde {
-    jvmArgumentProviders.add({
-        [
-                "--add-exports",
-                "java.base/jdk.internal.vm=ALL-UNNAMED",
-        ]
-    } as CommandLineArgumentProvider)
+intellijPlatformTesting.runIde {
+    runIdeLocally {
+        version = providers.gradleProperty("ideTargetVersion")
+        type = IntelliJPlatformType.IntellijIdeaCommunity
+        task {
+            jvmArgumentProviders.add({
+                [
+                        "--add-exports",
+                        "java.base/jdk.internal.vm=ALL-UNNAMED"
+                ]
+            } as CommandLineArgumentProvider)
+        }
+    }
 }
 
 test {
     useJUnitPlatform()
-
     testLogging {
         showStandardStreams = true
         exceptionFormat = 'full'
     }
 }
-downloadRobotServerPlugin {
-    version.set(remoteRobotVersion)
-}
+intellijPlatformTesting.runIde {
 
-runIdeForUiTests {
-    systemProperty "robot-server.port", "8082"
-    systemProperty "ide.mac.message.dialogs.as.sheets", "false"
-    systemProperty "jb.privacy.policy.text", "<!--999.999-->"
-    systemProperty "jb.consents.confirmation.enabled", "false"
-    systemProperty "idea.trust.all.projects", "true"
-    systemProperty "ide.show.tips.on.startup.default.value", "false"
-    systemProperty "ide.mac.file.chooser.native", "false"
-    systemProperty "jbScreenMenuBar.enabled", "false"
-    systemProperty "apple.laf.useScreenMenuBar", "false"
+    runIdeForUiTests {
+        task {
+            version = providers.gradleProperty("ideTargetVersion")
+            type = IntelliJPlatformType.IntellijIdeaCommunity
+            jvmArgumentProviders.add({
+                [
+                        "-Drobot-server.port=8082",
+                        "-Dide.mac.message.dialogs.as.sheets=false",
+                        "-Djb.privacy.policy.text=<!--999.999-->",
+                        "-Djb.consents.confirmation.enabled=false",
+                        "-Didea.trust.all.projects=true",
+                        "-Dide.show.tips.on.startup.default.value=false",
+                        "-Dide.mac.file.chooser.native=false",
+                        "-DjbScreenMenuBar.enabled=false",
+                        "-Dapple.laf.useScreenMenuBar=false",
+                ]
+            } as CommandLineArgumentProvider)
+        }
+        plugins {
+            robotServerPlugin(remoteRobotVersion)
+        }
+    }
 }
 
 intellijPlatform {

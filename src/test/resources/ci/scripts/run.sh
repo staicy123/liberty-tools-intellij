@@ -162,7 +162,7 @@ main() {
     callLivenessEndpoint=(curl -s http://localhost:8082)
     count=1
     while ! ${callLivenessEndpoint[@]} | grep -qF 'Welcome to IntelliJ IDEA'; do
-        if [ $count -eq 24 ]; then
+        if [ $count -eq 30 ]; then
             echo -e "\n$(${currentTime[@]}): ERROR: Timed out waiting for the Intellij IDE Welcome Page to start. Output:"
             exit 12
         fi

@@ -93,7 +93,8 @@ public abstract class SingleModJakartaLSTestCommon {
 
     /**
      * Tests Jakarta Language Server diagnostic support in a Java source file
-     */
+     *
+     **/
     @Test
     @Video
     public void testJakartaDiagnosticsInJavaPart() {
