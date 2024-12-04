@@ -1842,17 +1842,7 @@ public class UIBotTestUtils {
      */
     public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        String version = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
-        if (version.startsWith("2024.2")) {
-            // Use the version-specific menu text for 2024.2
-            projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
-        } else if (version.startsWith("2024.3")) {
-            // Use the version-specific menu text for 2024.3
-            projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations…");
-        } else {
-            throw new UnsupportedOperationException("Unsupported IntelliJ version: " + version);
-        }
-
+        handleMenuBasedOnVersion(remoteRobot, "Run", "Edit Configurations...", "Edit Configurations…");
         // Find the Run/Debug Configurations dialog.
         DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
                 DialogFixture.byTitle("Run/Debug Configurations"),
@@ -2104,41 +2094,7 @@ public class UIBotTestUtils {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         for (int attempt = 0; attempt < 5; attempt++) { // Retry up to 5 times
             try {
-                // Click on the main menu
-                projectFrame.clickOnMainMenu(remoteRobot);
-
-                // Wait for the first menu to be displayed
-                RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-                        Duration.ofSeconds(1),
-                        "Waiting for first menu to get displayed",
-                        "Timeout while trying to find or interact with menu first window items.",
-                        () -> !(projectFrame.findAll(ContainerFixture.class,
-                                byXpath("//div[@class='HeavyWeightWindow']"))).isEmpty());
-
-                // Locate and interact with the first menu
-                List<ContainerFixture> firstMenuPopup = projectFrame.findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
-                firstMenuPopup.get(0).findText("Run").moveMouse();
-
-                // Wait for the second menu to be displayed
-                RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-                        Duration.ofSeconds(1),
-                        "Waiting for second menu to get displayed",
-                        "Timeout while trying to find or interact with menu second window items.",
-                        () -> !firstMenuPopup.get(0).findAll(ContainerFixture.class,
-                                        byXpath("//div[@class='HeavyWeightWindow']"))
-                                .isEmpty());
-
-                // Locate and interact with the second menu
-                List<ContainerFixture> secondMenuPopup = firstMenuPopup.get(0).findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
-
-                // Get IntelliJ version and choose the correct action
-                String version = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
-                if (version.startsWith("2024.2")) {
-                    secondMenuPopup.get(0).findText(execMode == ExecMode.DEBUG ? "Debug..." : "Run...").click();
-                } else {
-                    secondMenuPopup.get(0).findText(execMode == ExecMode.DEBUG ? "Debug…" : "Run…").click();
-                }
-
+                handleMenuBasedOnVersion(remoteRobot, "Run", execMode == ExecMode.DEBUG ? "Debug..." : "Run...", execMode == ExecMode.DEBUG ? "Debug…" : "Run…");
                 // Exit loop if successful
                 break;
 
@@ -2197,16 +2153,7 @@ public class UIBotTestUtils {
      */
     public static void deleteLibertyRunConfigurations(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        String version = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
-        if (version.startsWith("2024.2")) {
-            // Use the version-specific menu text for 2024.2
-            projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations...");
-        } else if (version.startsWith("2024.3")) {
-            // Use the version-specific menu text for 2024.3
-            projectFrame.clickOnMainMenuList(remoteRobot, "Run", "Edit Configurations…");
-        } else {
-            throw new UnsupportedOperationException("Unsupported IntelliJ version: " + version);
-        }
+        handleMenuBasedOnVersion(remoteRobot, "Run", "Edit Configurations...", "Edit Configurations…");
 
         // The Run/Debug configurations dialog could resize and reposition icons. Retry in case of a failure.
         int maxRetries = 3;
@@ -2569,5 +2516,33 @@ public class UIBotTestUtils {
         } catch (WaitForConditionTimeoutException e) {
             System.err.println("ERROR: Timeout while trying to find or click the SquareStripeButton for file: " + fileName);
         }
+    }
+
+    /**
+     * Handles version-specific menu actions based on the IntelliJ IDEA version.
+     *
+     * @param remoteRobot        Instance of the RemoteRobot to interact with the IntelliJ UI.
+     * @param menuAction1        The name of the menu item (e.g., "Run").
+     * @param menuAction2024_2   The submenu option for IntelliJ version 2024.2.
+     * @param menuAction2024_3   The submenu option for IntelliJ version 2024.3.
+     * @throws UnsupportedOperationException if the IntelliJ version is not supported.
+     */
+    public static void handleMenuBasedOnVersion(RemoteRobot remoteRobot, String menuAction1, String menuAction2024_2, String menuAction2024_3) {
+        // Using Remote robot's javascript API Retrieve the IntelliJ version
+        String intellijVersion = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
+
+        String menuAction2;
+        if (intellijVersion.startsWith("2024.2")) {
+            menuAction2 = menuAction2024_2;
+        } else if (intellijVersion.startsWith("2024.3")) {
+            menuAction2 = menuAction2024_3;
+        } else {
+            // If the version is unsupported, throw an exception to indicate the issue.
+            throw new UnsupportedOperationException("Unsupported IntelliJ version: " + intellijVersion);
+        }
+
+        // Perform the menu navigation ny locating project frame using the determined submenu option.
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+        projectFrame.clickOnMainMenuList(remoteRobot, menuAction1, menuAction2);
     }
 }
