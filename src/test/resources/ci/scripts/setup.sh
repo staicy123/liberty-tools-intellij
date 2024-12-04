@@ -28,7 +28,7 @@ SEMERU_OPEN_JDK_VERSION="${SEMERU_OPEN_JDK_MAJOR}.0.13"
 SEMERU_OPEN_JDK_BUILD=11
 SEMERU_OPENJ9_VERSION=0.48.0
 
-
+# See https://developer.ibm.com/languages/java/semeru-runtimes/downloads/
 SEMERU_ARCHIVE_MAC_ARM64_SHA256=7471a2db121be72c173b12189770b357bda93e3c58c0b3248c4cd84a1c596925
 SEMERU_ARCHIVE_MAC_SHA256=eaed7a64d97a4320c737b1a51f036bcbd1a484c6e21d568073c56157c23c6589
 SEMERU_ARCHIVE_LINUX_SHA256=0964047f5f4f2419e9c7dee9d2f5d34968dcd271741f4341429ebe3a6fd80cb6
@@ -122,18 +122,18 @@ installJDK() {
         curl -fsSL -o /tmp/liberty-dev-tool-semeru-jdk.tar.gz "$url"
         echo "${SEMERU_ARCHIVE_LINUX_SHA256}  /tmp/liberty-dev-tool-semeru-jdk.tar.gz" | sha256sum -c -
         tar -xzf /tmp/liberty-dev-tool-semeru-jdk.tar.gz -C "$SOFTWARE_INSTALL_DIR"
-       elif [[ $OS == "Darwin" ]]; then
-           javaHome="$javaHome"/Contents/Home
-         ARCH="x64"
-                if [ $(uname -m) = "arm64" ]; then
-                  ARCH="aarch64"
-                  SEMERU_ARCHIVE_MAC_SHA256=${SEMERU_ARCHIVE_MAC_ARM64_SHA256}
-                fi
-                local url="https://github.com/ibmruntimes/semeru${SEMERU_OPEN_JDK_MAJOR}-binaries/releases/download/jdk-${SEMERU_OPEN_JDK_VERSION}%2B${SEMERU_OPEN_JDK_BUILD}_openj9-${SEMERU_OPENJ9_VERSION}/ibm-semeru-open-jdk_${ARCH}_mac_${SEMERU_OPEN_JDK_VERSION}_${SEMERU_OPEN_JDK_BUILD}_openj9-${SEMERU_OPENJ9_VERSION}.tar.gz"
-                curl -fsSL -o /tmp/liberty-dev-tool-semeru-jdk.tar.gz "$url"
-                echo "${SEMERU_ARCHIVE_MAC_SHA256}  /tmp/liberty-dev-tool-semeru-jdk.tar.gz" | shasum -a 256 -c -
-                tar -xzf /tmp/liberty-dev-tool-semeru-jdk.tar.gz -C "$SOFTWARE_INSTALL_DIR"
-        else
+    elif [[ $OS == "Darwin" ]]; then
+       javaHome="$javaHome"/Contents/Home
+       ARCH="x64"
+       if [ $(uname -m) = "arm64" ]; then
+         ARCH="aarch64"
+         SEMERU_ARCHIVE_MAC_SHA256=${SEMERU_ARCHIVE_MAC_ARM64_SHA256}
+       fi
+       local url="https://github.com/ibmruntimes/semeru${SEMERU_OPEN_JDK_MAJOR}-binaries/releases/download/jdk-${SEMERU_OPEN_JDK_VERSION}%2B${SEMERU_OPEN_JDK_BUILD}_openj9-${SEMERU_OPENJ9_VERSION}/ibm-semeru-open-jdk_${ARCH}_mac_${SEMERU_OPEN_JDK_VERSION}_${SEMERU_OPEN_JDK_BUILD}_openj9-${SEMERU_OPENJ9_VERSION}.tar.gz"
+       curl -fsSL -o /tmp/liberty-dev-tool-semeru-jdk.tar.gz "$url"
+       echo "${SEMERU_ARCHIVE_MAC_SHA256}  /tmp/liberty-dev-tool-semeru-jdk.tar.gz" | shasum -a 256 -c -
+       tar -xzf /tmp/liberty-dev-tool-semeru-jdk.tar.gz -C "$SOFTWARE_INSTALL_DIR"
+    else
         local url="https://github.com/ibmruntimes/semeru${SEMERU_OPEN_JDK_MAJOR}-binaries/releases/download/jdk-${SEMERU_OPEN_JDK_VERSION}%2B${SEMERU_OPEN_JDK_BUILD}_openj9-${SEMERU_OPENJ9_VERSION}/ibm-semeru-open-jdk_x64_windows_${SEMERU_OPEN_JDK_VERSION}_${SEMERU_OPEN_JDK_BUILD}_openj9-${SEMERU_OPENJ9_VERSION}.zip"
         curl -fsSL -o /tmp/liberty-dev-tool-semeru-jdk.zip "$url"
         local shaAll=$(certutil -hashfile /tmp/liberty-dev-tool-semeru-jdk.zip SHA256)
