@@ -19,6 +19,7 @@ allprojects {
     targetCompatibility = javaVersion
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
+        options.forkOptions.memoryMaximumSize = "2g"
     }
 }
 
