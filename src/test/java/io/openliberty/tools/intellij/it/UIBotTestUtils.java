@@ -174,7 +174,13 @@ public class UIBotTestUtils {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
         projectFrame.clickOnMainMenu(remoteRobot);
 
-        clickOnSquareStripeButton(remoteRobot, "Liberty");
+        ComponentFixture wpStripeButton = projectFrame.getStripeButton("Liberty", "60");
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+                Duration.ofSeconds(1),
+                "Waiting for the Liberty button on the main window pane stripe to be enabled",
+                "The Liberty button on then main window pane stripe is not enabled",
+                () -> projectFrame.isComponentEnabled(wpStripeButton));
+
     }
 
     /**
@@ -2242,14 +2248,14 @@ public class UIBotTestUtils {
     public static void stopDebugger(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         try {
-            projectFrame.getBaseLabel("Debug:", "5");
+            projectFrame.getBaseLabel("Debug", "5");
         } catch (WaitForConditionTimeoutException wfcte) {
             // The debug tab is not opened for some reason. Open it.
             ComponentFixture debugStripe = projectFrame.getStripeButton("Debug", "10");
-            debugStripe.doubleClick();
+            debugStripe.click();
         }
 
-        Locator locator = byXpath("//div[contains(@myvisibleactions, 'Out')]//div[@myicon='stop.svg']");
+        Locator locator = byXpath("//div[@class='MyNonOpaquePanel']//div[contains(@myaction.key, 'action.Stop.text')]");
         ActionButtonFixture stopButton = projectFrame.actionButton(locator, Duration.ofSeconds(60));
         stopButton.click();
     }
@@ -2492,24 +2498,24 @@ public class UIBotTestUtils {
         }
     }
 
-    /**
-     * Clicks on a "SquareStripeButton" for a given file name.
-     * The method finds the button based on the specified file name and XPath, then clicks it.
-     * If the button is not found within the timeout period, an error message is logged.
-     *
-     * @param remoteRobot the {@link RemoteRobot} instance used to interact with the UI.
-     * @param fileName the name of the file associated with the SquareStripeButton to click.
-     */
-    public static void clickOnSquareStripeButton(RemoteRobot remoteRobot, String fileName) {
-        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        try {
-            String xPath = "//div[@accessiblename='" + fileName + "' and @class='SquareStripeButton']";
-            ComponentFixture actionButton = projectFrame.getActionButton(xPath, "10");
-            actionButton.click();
-        } catch (WaitForConditionTimeoutException e) {
-            System.err.println("ERROR: Timeout while trying to find or click the SquareStripeButton for file: " + fileName);
-        }
-    }
+//    /**
+//     * Clicks on a "SquareStripeButton" for a given file name.
+//     * The method finds the button based on the specified file name and XPath, then clicks it.
+//     * If the button is not found within the timeout period, an error message is logged.
+//     *
+//     * @param remoteRobot the {@link RemoteRobot} instance used to interact with the UI.
+//     * @param fileName the name of the file associated with the SquareStripeButton to click.
+//     */
+//    public static void clickOnSquareStripeButton(RemoteRobot remoteRobot, String fileName) {
+//        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+//        try {
+//            String xPath = "//div[@accessiblename='" + fileName + "' and @class='SquareStripeButton']";
+//            ComponentFixture actionButton = projectFrame.getActionButton(xPath, "10");
+//            actionButton.click();
+//        } catch (WaitForConditionTimeoutException e) {
+//            System.err.println("ERROR: Timeout while trying to find or click the SquareStripeButton for file: " + fileName);
+//        }
+//    }
 
     /**
      * Handles version-specific menu actions based on the IntelliJ IDEA version.

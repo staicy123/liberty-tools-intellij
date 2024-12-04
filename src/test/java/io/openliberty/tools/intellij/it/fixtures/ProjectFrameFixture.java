@@ -183,10 +183,10 @@ public class ProjectFrameFixture extends CommonContainerFixture {
      * @return The ComponentFixture object associated with the StripeButton class.
      */
     public ComponentFixture getStripeButton(String... xpathVars) {
-        String text = xpathVars[0];
+        String squareStripeButton = xpathVars[0];
         String waitTime = xpathVars[1];
         return find(ComponentFixture.class,
-                byXpath("//div[@tooltiptext='" + text + "']"),
+                byXpath("//div[@accessiblename='" + squareStripeButton + "' and @class='SquareStripeButton']"),
                 Duration.ofSeconds(Integer.parseInt(waitTime)));
     }
 
@@ -339,9 +339,9 @@ public class ProjectFrameFixture extends CommonContainerFixture {
     }
 
     /**
-     * Returns the ContainerFixture object associated with the RunConfigurationsComboBoxButton class.
+     * Returns the ContainerFixture object associated with the ActionButtonWithText class.
      *
-     * @return The ContainerFixture object associated with the RunConfigurationsComboBoxButton class.
+     * @return The ContainerFixture object associated with the ActionButtonWithText class.
      */
     public ComponentFixture getRunConfigurationsComboBoxButton() {
         return find(ContainerFixture.class, byXpath("//div[@class='ActionButtonWithText']"), Duration.ofSeconds(5));
