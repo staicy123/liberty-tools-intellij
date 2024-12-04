@@ -120,14 +120,7 @@ public class UIBotTestUtils {
             // From the project frame.
             ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
             commonFixture = projectFrame;
-
-            String version = projectFrame.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
-            if (version.startsWith("2024.2")) {
-                projectFrame.clickOnMainMenuList(remoteRobot, "File", "Open...");
-            }
-            else {
-                projectFrame.clickOnMainMenuList(remoteRobot, "File", "Open…");
-            }
+            handleMenuBasedOnVersion(remoteRobot, "File", "Open...", "Open…");
         }
 
         // Specify the project's path. The text field is pre-populated by default.
