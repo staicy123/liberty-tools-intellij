@@ -207,7 +207,7 @@ public class UIBotTestUtils {
     public static void closeProjectFrame(RemoteRobot remoteRobot) {
         // Click on File on the Menu bar.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        projectFrame.clickOnMainMenuList(remoteRobot, "File", "Close Project");
+        projectFrame.clickOnMainMenuWithActions(remoteRobot, "File", "Close Project");
     }
 
     /**
@@ -730,7 +730,7 @@ public class UIBotTestUtils {
      */
     public static void closeAllEditorTabs(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        projectFrame.clickOnMainMenuSubList(remoteRobot, "Window", "Editor Tabs", "Close All Tabs");
+        projectFrame.clickOnMainMenuWithActions(remoteRobot, "Window", "Editor Tabs", "Close All Tabs");
     }
 
     /**
@@ -1419,10 +1419,10 @@ public class UIBotTestUtils {
     public static void copyWindowContent(RemoteRobot remoteRobot) {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+        projectFrame.clickOnMainMenuWithActions(remoteRobot, "Edit", "Select All");
 
         // Copy the content.
-        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Copy");
+        projectFrame.clickOnMainMenuWithActions(remoteRobot, "Edit", "Copy");
 
     }
 
@@ -1434,10 +1434,10 @@ public class UIBotTestUtils {
     public static void clearWindowContent(RemoteRobot remoteRobot) {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+        projectFrame.clickOnMainMenuWithActions(remoteRobot, "Edit", "Select All");
 
         // Delete/Clear the content.
-        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Delete");
+        projectFrame.clickOnMainMenuWithActions(remoteRobot, "Edit", "Delete");
     }
 
     public static void pasteOnActiveWindow(RemoteRobot remoteRobot) {
@@ -1459,11 +1459,11 @@ public class UIBotTestUtils {
         }
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
-        projectFrame.clickOnMainMenuList(remoteRobot, "Edit", "Select All");
+        projectFrame.clickOnMainMenuWithActions(remoteRobot, "Edit", "Select All");
         // Paste the content.
-        projectFrame.clickOnMainMenuSubList(remoteRobot, "Edit", "Paste", "Paste");
+        projectFrame.clickOnMainMenuWithActions(remoteRobot, "Edit", "Paste", "Paste");
         // Save.
-        projectFrame.clickOnMainMenuList(remoteRobot, "File", "Save All");
+        projectFrame.clickOnMainMenuWithActions(remoteRobot, "File", "Save All");
     }
 
     /**
@@ -1576,7 +1576,7 @@ public class UIBotTestUtils {
 
                 // Click on Navigate on the Menu bar.
                 ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
-                projectFrame.clickOnMainMenuList(remoteRobot, "Navigate", "Search Everywhere");
+                projectFrame.clickOnMainMenuWithActions(remoteRobot, "Navigate", "Search Everywhere");
 
                 // Click on the Actions tab
                 ComponentFixture actionsTabFixture = projectFrame.getSETabLabel("Actions");
@@ -2542,6 +2542,6 @@ public class UIBotTestUtils {
 
         // Perform the menu navigation ny locating project frame using the determined submenu option.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        projectFrame.clickOnMainMenuList(remoteRobot, menuAction1, menuAction2);
+        projectFrame.clickOnMainMenuWithActions(remoteRobot, menuAction1, menuAction2);
     }
 }
