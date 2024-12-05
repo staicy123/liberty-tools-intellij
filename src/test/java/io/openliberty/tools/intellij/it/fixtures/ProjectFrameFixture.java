@@ -199,7 +199,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
     public ComponentFixture getSETabLabel(String... xpathVars) {
         String text = xpathVars[0];
         return find(ComponentFixture.class,
-                byXpath("//div[@text='" + text + "']"),
+                byXpath("//div[@class='JLabel' and @text='" + text + "']"),
                 Duration.ofSeconds(10));
     }
 
@@ -276,7 +276,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
      * @return The ContainerFixture object associated with the DocumentationHintEditorPane pop-up window.
      */
     public ContainerFixture getDiagnosticPane() {
-        return find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']//div[@class='JRootPane']"), Duration.ofSeconds(5));
+        return find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']//div[@class='JBHtmlPane']"), Duration.ofSeconds(5));
     }
 
     /**
@@ -388,7 +388,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         boolean actionPerformed = false; // Flag to check if the action is completed
 
-        for (int attempt = 0; attempt < 3; attempt++) { // Retry up to 5 times
+        for (int attempt = 0; attempt < 5; attempt++) { // Retry up to 5 times
             try {
                 // Click on the main menu to display the first menu
                 clickOnMainMenu(remoteRobot);
@@ -450,7 +450,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         boolean actionPerformed = false; // Flag to indicate success
 
-        for (int attempt = 0; attempt < 3; attempt++) { // Retry up to 5 times
+        for (int attempt = 0; attempt < 5; attempt++) { // Retry up to 5 times
             try {
                 clickOnMainMenu(remoteRobot);
 
