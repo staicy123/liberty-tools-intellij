@@ -2527,7 +2527,7 @@ public class UIBotTestUtils {
      * @throws UnsupportedOperationException if the IntelliJ version is not supported.
      */
     public static void handleMenuBasedOnVersion(RemoteRobot remoteRobot, String menuAction1, String menuAction2024_2, String menuAction2024_3) {
-        // Using Remote robot's javascript API Retrieve the IntelliJ version
+        // Using Remote robot's javascript API Retrieve the IntelliJ versions
         String intellijVersion = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
 
         String menuAction2;
